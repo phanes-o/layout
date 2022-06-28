@@ -11,71 +11,75 @@ func InitLogger(l Logger) {
 type Fields map[string]interface{}
 
 type Logger interface {
-	WithField(ctx context.Context, key string, value interface{}) Logger
-	WithFields(ctx context.Context, fields Fields) Logger
-	Trace(ctx context.Context, args ...interface{})
-	Tracef(ctx context.Context, format string, args ...interface{})
-	Debug(ctx context.Context, args ...interface{})
-	Debugf(ctx context.Context, format string, args ...interface{})
-	Info(ctx context.Context, args ...interface{})
-	Infof(ctx context.Context, format string, args ...interface{})
-	Warn(ctx context.Context, args ...interface{})
-	Warnf(ctx context.Context, format string, args ...interface{})
-	Error(ctx context.Context, args ...interface{})
-	Errorf(ctx context.Context, format string, args ...interface{})
-	Panic(ctx context.Context, args ...interface{})
-	Panicf(ctx context.Context, format string, args ...interface{})
-	Fatal(ctx context.Context, args ...interface{})
-	Fatalf(ctx context.Context, format string, args ...interface{})
+	WithField(key string, value interface{}) Logger
+	WithFields(fields Fields) Logger
+	WithContext(ctx context.Context) Logger
+	Trace(args ...interface{})
+	Tracef(format string, args ...interface{})
+	Debug(args ...interface{})
+	Debugf(format string, args ...interface{})
+	Info(args ...interface{})
+	Infof(format string, args ...interface{})
+	Warn(args ...interface{})
+	Warnf(format string, args ...interface{})
+	Error(args ...interface{})
+	Errorf(format string, args ...interface{})
+	Panic(args ...interface{})
+	Panicf(format string, args ...interface{})
+	Fatal(args ...interface{})
+	Fatalf(format string, args ...interface{})
 }
 
-func WithField(ctx context.Context, key string, value interface{}) Logger {
-	return defaultLogger.WithField(ctx, key, value)
+func WithContext(ctx context.Context) Logger {
+	return defaultLogger.WithContext(ctx)
+}
+func WithField(key string, value interface{}) Logger {
+	return defaultLogger.WithField(key, value)
 }
 
-func WithFields(ctx context.Context, fields Fields) Logger {
-	return defaultLogger.WithFields(ctx, fields)
+func WithFields(fields Fields) Logger {
+	return defaultLogger.WithFields(fields)
 }
 
-func Trace(ctx context.Context, args ...interface{}) {
-	defaultLogger.Trace(ctx, args)
+func Trace(args ...interface{}) {
+	defaultLogger.Trace(args)
 }
-func Tracef(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Tracef(ctx, format, args)
+func Tracef(format string, args ...interface{}) {
+	defaultLogger.Tracef(format, args)
 }
-func Debug(ctx context.Context, args ...interface{}) {
-	defaultLogger.Debug(ctx, args)
+func Debug(args ...interface{}) {
+	defaultLogger.Debug(args)
 }
-func Debugf(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Debugf(ctx, format, args)
+func Debugf(format string, args ...interface{}) {
+	defaultLogger.Debugf(format, args)
 }
-func Info(ctx context.Context, args ...interface{}) {
-	defaultLogger.Info(ctx, args)
+func Info(args ...interface{}) {
+	defaultLogger.Info(args)
 }
-func Infof(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Infof(ctx, format, args)
+func Infof(format string, args ...interface{}) {
+	defaultLogger.Infof(format, args)
 }
-func Warn(ctx context.Context, args ...interface{}) {
-	defaultLogger.Warn(ctx, args)
+func Warn(args ...interface{}) {
+	defaultLogger.Warn(args)
 }
-func Warnf(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Warnf(ctx, format, args)
+func Warnf(format string, args ...interface{}) {
+	defaultLogger.Warnf(format, args)
 }
-func Error(ctx context.Context, args ...interface{}) {
-	defaultLogger.Error(ctx, args)
+func Error(args ...interface{}) {
+	defaultLogger.Error(args)
 }
-func Errorf(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Errorf(ctx, format, args)
+func Errorf(format string, args ...interface{}) {
+	defaultLogger.Errorf(format, args)
 }
-func Panic(ctx context.Context, args ...interface{}) {
-	defaultLogger.Panic(ctx, args)
+func Panic(args ...interface{}) {
+	defaultLogger.Panic(args)
 }
-func Panicf(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Panicf(ctx, format, args)
+func Panicf(format string, args ...interface{}) {
+	defaultLogger.Panicf(format, args)
 }
-func Fatal(ctx context.Context, args ...interface{}) {
-	defaultLogger.Fatal(ctx, args)
+func Fatal(args ...interface{}) {
+	defaultLogger.Fatal(args)
 }
-func Fatalf(ctx context.Context, format string, args ...interface{}) {
-	defaultLogger.Fatalf(ctx, format, args)
+func Fatalf(format string, args ...interface{}) {
+	defaultLogger.Fatalf(format, args)
 }

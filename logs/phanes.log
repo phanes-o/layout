@@ -1,11 +1,2 @@
-time="2022-06-28T16:06:57+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:10:55+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:12:18+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:39:58+08:00" level=info message="[test log]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:41:23+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-[36mINFO[0m[0000]/Users/du/code/phanes/phanes/collector/logger/logrus.go:72 phanes/collector/logger.(*logrusLog).Info() [[test log]]                                 
-time="2022-06-28T16:43:56+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:44:15+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:45:19+08:00" level=info message="[[test log]]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T16:46:30+08:00" level=info message="[test log]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:72"
-time="2022-06-28T17:35:22+08:00" level=info message="[test log]" func="phanes/collector/logger.(*logrusLog).Info" file="/Users/du/code/phanes/phanes/collector/logger/logrus.go:71"
+{"level":"info","time":"2022-06-28T23:26:26.848+0800","caller":"/Users/du/code/phanes/phanes/main.go:46","msg":"[[finished to init all component]]"}
+{"level":"info","time":"2022-06-28T23:34:40.602+0800","caller":"/Users/du/code/phanes/phanes/main.go:46","msg":"[[finished to init all component]]"}

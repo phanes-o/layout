@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"go-micro.dev/v4/logger"
 	"os"
 	"os/signal"
 	"phanes/bll"
@@ -45,10 +43,8 @@ func main() {
 	for _, fn := range bootstraps {
 		cancels = append(cancels, fn())
 	}
-	logger.Info("test go-micro logger")
-
-	log.Info(context.Background(), "test log")
+	log.Info("finished to init all component")
 
 	<-config.ExitC
-	log.Info(context.Background(), "server shutdown!")
+	log.Info("server shutdown!")
 }

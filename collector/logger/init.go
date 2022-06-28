@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/sirupsen/logrus"
+	"go.uber.org/zap/zapcore"
 	"io"
 	"os"
 	"phanes/config"
@@ -24,7 +24,7 @@ func Init() func() {
 	}
 	writers = append(writers, os.Stderr)
 
-	logger := NewLogger(logrus.DebugLevel, true, writers...)
+	logger := ZapLog(zapcore.DebugLevel, writers...)
 	InitLogger(logger)
 
 	return func() {}
