@@ -1,2 +1,3 @@
 {"level":"info","time":"2022-06-28T23:26:26.848+0800","caller":"/Users/du/code/phanes/phanes/main.go:46","msg":"[[finished to init all component]]"}
 {"level":"info","time":"2022-06-28T23:34:40.602+0800","caller":"/Users/du/code/phanes/phanes/main.go:46","msg":"[[finished to init all component]]"}
+{"level":"info","time":"2022-06-28T23:36:46.721+0800","caller":"/Users/du/code/phanes/phanes/main.go:49","msg":"[[server shutdown!]]"}
