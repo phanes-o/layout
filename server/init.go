@@ -22,7 +22,6 @@ func Init() func() {
 	Service.Init(
 		micro.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
 		micro.AfterStop(AfterExit),
-		micro.AfterStop(AfterExit),
 		micro.Client(grpc.NewClient()),
 		// choose you needed wrapper
 		micro.WrapClient(roundrobin.NewClientWrapper()),

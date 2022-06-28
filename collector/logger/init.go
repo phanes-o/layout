@@ -3,6 +3,7 @@ package logger
 import (
 	"github.com/sirupsen/logrus"
 	"io"
+	"os"
 	"phanes/config"
 )
 
@@ -21,9 +22,10 @@ func Init() func() {
 	if l.RedisKey != "" {
 		writers = append(writers, RedisOutputWriter(config.KV, l.RedisKey))
 	}
+	writers = append(writers, os.Stderr)
 
-	log := NewLogrusAdapt(logrus.DebugLevel, true, writers...)
-	InitGlobal(log)
+	logger := NewLogger(logrus.DebugLevel, true, writers...)
+	InitLogger(logger)
 
 	return func() {}
 }

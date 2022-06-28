@@ -1,6 +1,8 @@
 package postgres
 
-import "phanes/model/entity"
+import (
+	"phanes/model/entity"
+)
 
 type user struct{}
 

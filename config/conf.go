@@ -20,7 +20,8 @@ type Config struct {
 	Env     string `json:"env"`
 	Version string `json:"version"`
 
-	Jaeger string `json:"jaeger"`
+	HttpListen string `json:"http_listen"`
+	Jaeger     string `json:"jaeger"`
 
 	Postgres string `json:"postgres"`
 
@@ -38,5 +39,10 @@ type Config struct {
 		Addr string `json:"addr"`
 		User string `json:"user"`
 		Pwd  string `json:"pwd"`
-	}
+	} `json:"broker"`
+
+	Traefik struct {
+		Domain string `json:"domain"`
+		Prefix string `json:"prefix"`
+	} `json:"traefik"`
 }

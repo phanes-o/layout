@@ -1,11 +1,14 @@
 package main
 
 import (
+	"context"
+	"go-micro.dev/v4/logger"
 	"os"
 	"os/signal"
 	"phanes/bll"
 	"phanes/client"
 	"phanes/collector"
+	log "phanes/collector/logger"
 	"phanes/config"
 	"phanes/server"
 	"phanes/store"
@@ -15,7 +18,6 @@ type InitFunc func() func()
 
 func main() {
 	var (
-		exit    = make(chan struct{})
 		cancels = make([]func(), 0)
 
 		// system init
@@ -37,12 +39,16 @@ func main() {
 		for _, cancel := range cancels {
 			cancel()
 		}
-		close(exit)
+		close(config.ExitC)
 	}()
 
 	for _, fn := range bootstraps {
 		cancels = append(cancels, fn())
 	}
+	logger.Info("test go-micro logger")
 
-	<-exit
+	log.Info(context.Background(), "test log")
+
+	<-config.ExitC
+	log.Info(context.Background(), "server shutdown!")
 }

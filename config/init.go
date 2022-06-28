@@ -5,6 +5,7 @@ import (
 	"github.com/urfave/cli/v2"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/config"
+	"log"
 	"os"
 	"phanes/utils"
 	"time"
@@ -23,23 +24,39 @@ func Init() func() {
 		etcd.WithDialTimeout(time.Second*time.Duration(10)),
 	)
 	// Create new config
-	if conf, err = config.NewConfig(); err != nil {
-		utils.Throw(err)
-	}
-
-	// Load file source
-	if err = conf.Load(etcdSource); err != nil {
+	if conf, err = config.NewConfig(config.WithSource(etcdSource)); err != nil {
 		utils.Throw(err)
 	}
 	err = conf.Scan(&Conf)
-	// init others
 
+	watcher, err := conf.Watch()
+	if err != nil {
+		log.Println(err)
+	}
+
+	go func() {
+		for {
+			select {
+			case <-ExitC:
+				watcher.Stop()
+				return
+			default:
+			}
+			next, err := watcher.Next()
+			if err = next.Scan(&Conf); err != nil {
+				log.Println(err)
+			}
+		}
+	}()
+
+	// init others
+	initRedis()
 	return func() {}
 }
 
 func extractEtcdAddr() error {
 	app := cli.NewApp()
-	app.Name = "vsm-manager"
+	app.Name = "phanes"
 	app.Flags = cmd.DefaultCmd.App().Flags
 	app.Action = func(ctx *cli.Context) error {
 		EtcdAddr = ctx.String("registry_address")
