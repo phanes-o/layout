@@ -13,8 +13,9 @@ import (
 
 func Init() func() {
 	var (
-		conf config.Config
-		err  error
+		conf    config.Config
+		err     error
+		cancels = make([]func(), 0)
 	)
 	utils.Throw(extractEtcdAddr())
 	etcdSource := etcd.NewSource(
@@ -50,8 +51,17 @@ func Init() func() {
 	}()
 
 	// init others
-	initRedis()
-	return func() {}
+	inits := []func() func(){
+		initRedis,
+	}
+	for _, init := range inits {
+		cancels = append(cancels, init())
+	}
+	return func() {
+		for _, cancel := range cancels {
+			cancel()
+		}
+	}
 }
 
 func extractEtcdAddr() error {
