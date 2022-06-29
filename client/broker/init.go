@@ -2,6 +2,7 @@ package broker
 
 import (
 	"go-micro.dev/v4/broker"
+	log "phanes/collector/logger"
 	"phanes/config"
 )
 
@@ -16,6 +17,8 @@ func Init() func() {
 	}
 
 	return func() {
-		PubSub.Disconnect()
+		if err := PubSub.Disconnect(); err != nil {
+			log.Error(err)
+		}
 	}
 }
