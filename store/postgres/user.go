@@ -30,6 +30,6 @@ func (a *user) Delete(id int64) (err error) {
 }
 
 func (a *user) List(opts map[string]interface{}) (users []*entity.User, err error) {
-
+	// todo: implement
 	return nil, nil
 }

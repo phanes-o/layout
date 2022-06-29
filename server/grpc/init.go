@@ -7,6 +7,8 @@ import (
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
 	"phanes/config"
+	"phanes/server/grpc/middleware"
+	v1 "phanes/server/grpc/v1"
 	"phanes/utils"
 	"time"
 )
@@ -18,9 +20,11 @@ func Init() micro.Option {
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
+		server.WrapHandler(middleware.Log()),
 	)
 	// register grpc services
 	// example: utils.Throw(micro.RegisterHandler(srv, new(App)))
+	utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
 
 	utils.Throw(srv.Start())
 	return micro.Server(srv)

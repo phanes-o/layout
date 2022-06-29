@@ -1,6 +1,9 @@
 package bll
 
 import (
+	"context"
+	"github.com/phanes-o/proto/example"
+	"github.com/phanes-o/proto/primitive"
 	log "go-micro.dev/v4/logger"
 	"phanes/event"
 	"phanes/model/entity"
@@ -20,13 +23,14 @@ func (a *user) onEvent(ed *event.Data) {
 
 func (a *user) init() func() {
 	a.user = postgres.NewUser()
-
 	return func() {}
 }
 
-func (a *user) Create(u *entity.User) (err error) {
-	log.Debugf("create new user", u)
-
+func (a *user) Create(ctx context.Context, in *example.CreateUserRequest) (err error) {
+	u := &entity.User{
+		Username: in.Username,
+		Password: in.Password,
+	}
 	_, err = a.user.Create(u)
 	if err != nil {
 		log.Error(err)
@@ -34,4 +38,8 @@ func (a *user) Create(u *entity.User) (err error) {
 	}
 
 	return nil
+}
+
+func (a *user) Delete(ctx context.Context, p *primitive.Int64) error {
+	return a.user.Delete(p.Value)
 }

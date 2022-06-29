@@ -5,6 +5,7 @@ import (
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/server/http/v4"
 	"phanes/model"
+	"phanes/server/web/middleware"
 	"phanes/server/web/v1"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +28,7 @@ var (
 )
 
 func Init() micro.Option {
-	webName = config.Conf.Name + "-web"
+	webName = config.Conf.Name + "-httpc"
 	srv = http.NewServer(
 		server.Name(webName),
 		server.Version(config.Conf.Version),
@@ -43,7 +44,7 @@ func Init() micro.Option {
 	router.Use(gin.Recovery())
 
 	// register routers
-	v1Group := router.Group("v1")
+	v1Group := router.Group("v1", middleware.Log())
 	v1.Init(v1Group)
 
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
@@ -75,7 +76,7 @@ func Register() error {
 		SrvAddr:   webAddr,
 		Rule:      fmt.Sprintf("Host(`%s`) || PathPrefix(`%s`)", config.Conf.Traefik.Domain, config.Conf.Traefik.Prefix),
 		Prefix:    config.Conf.Traefik.Prefix,
-		EndPoints: []string{"http"},
+		EndPoints: []string{"httpc"},
 	}
 	if strings.ToLower(config.Conf.Env) == model.EnvProd {
 		conf.EndPoints = []string{"https"}

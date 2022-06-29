@@ -36,6 +36,7 @@ type Config struct {
 	} `json:"redis"`
 
 	Broker struct {
+		Type string `json:"type"` // support: rabbitmq, nats
 		Addr string `json:"addr"`
 		User string `json:"user"`
 		Pwd  string `json:"pwd"`
