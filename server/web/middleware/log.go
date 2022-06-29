@@ -33,10 +33,11 @@ func Log() gin.HandlerFunc {
 					})
 				}
 				log.WithFields(log.Fields{
-					"request":   c.Request.URL.String(),
-					"method":    c.Request.Method,
-					"ip":        c.ClientIP(),
-					"time_span": time.Now().Sub(start).String(),
+					"request":    c.Request.URL.String(),
+					"method":     c.Request.Method,
+					"ip":         c.ClientIP(),
+					"error_type": errType.String(),
+					"time_span":  time.Now().Sub(start).String(),
 				}).Error(err.Error())
 			}
 		} else {
