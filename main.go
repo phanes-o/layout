@@ -18,7 +18,7 @@ func main() {
 	var (
 		cancels = make([]func(), 0)
 
-		// system init
+		// system init func
 		bootstraps = []InitFunc{
 			config.Init,
 			collector.Init,
