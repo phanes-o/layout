@@ -28,18 +28,20 @@ var (
 )
 
 func Init() micro.Option {
-	webName = config.Conf.Name + "-httpc"
+	webName = config.Conf.Name + "-http"
+
 	srv = http.NewServer(
 		server.Name(webName),
 		server.Version(config.Conf.Version),
-		server.Address(config.Conf.HttpListen),
+		//server.Address(config.Conf.HttpListen),
+		server.Address(":7701"),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
 	)
 
 	router := gin.New()
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
@@ -48,6 +50,7 @@ func Init() micro.Option {
 	v1.Init(v1Group)
 
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
+	utils.Throw(srv.Start())
 	return micro.Server(srv)
 }
 

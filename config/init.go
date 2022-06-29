@@ -53,6 +53,7 @@ func Init() func() {
 	// init others
 	inits := []func() func(){
 		initRedis,
+		initDB,
 	}
 	for _, init := range inits {
 		cancels = append(cancels, init())

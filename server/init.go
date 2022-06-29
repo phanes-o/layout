@@ -25,8 +25,8 @@ func Init() func() {
 		micro.Client(grpc.NewClient()),
 		// choose you needed wrapper
 		micro.WrapClient(roundrobin.NewClientWrapper()),
-		grpcServer.Init(),
 		webServer.Init(),
+		grpcServer.Init(),
 		// Add other server here
 		// example:
 		// exampleServer.Init(),
