@@ -5,6 +5,7 @@ import (
 	"github.com/phanes-o/proto/dto"
 	"github.com/phanes-o/proto/primitive"
 	log "go-micro.dev/v4/logger"
+	"phanes/errors"
 	"phanes/event"
 	"phanes/model/entity"
 	"phanes/store"
@@ -34,7 +35,7 @@ func (a *user) Create(ctx context.Context, in *dto.CreateUserRequest) (err error
 	_, err = a.user.Create(u)
 	if err != nil {
 		log.Error(err)
-		return err
+		return errors.Wrap(err, "user create failed")
 	}
 
 	return nil

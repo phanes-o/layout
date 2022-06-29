@@ -1,0 +1,25 @@
+{
+  "name": "phanes",
+  "env": "dev",
+  "version": "0.1.0",
+  "jaeger": "127.0.0.1:6831",
+  "postgre": "host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai",
+  "log": {
+    "file_name": "phanes",
+    "redis_key": "log_list"
+  },
+  "proxy": {
+    "domain": "http://127.0.0.1",
+    "prefix": "/phanes"
+  },
+  "redis": {
+    "addr": "127.0.0.1:6379",
+    "pwd": ""
+  },
+  "broker": {
+    "type": "rabbitmq",
+    "addr": "amqp://coco:kk123123123@127.0.0.1:5672/",
+    "user": "",
+    "pwd": ""
+  }
+}

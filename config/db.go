@@ -2,10 +2,10 @@ package config
 
 import (
 	"database/sql"
+	"log"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	log "phanes/collector/logger"
 )
 
 func initDB() func() {
@@ -29,7 +29,7 @@ func initDB() func() {
 
 	return func() {
 		if err = db.Close(); err != nil {
-			log.Error(err)
+			log.Println(err)
 		}
 	}
 

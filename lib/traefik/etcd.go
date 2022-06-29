@@ -49,10 +49,10 @@ func (r *etcdRegistry) loop() {
 			if _, err := r.cli.KeepAliveOnce(context.Background(), srv.LeaseID); err != nil {
 				if err == rpctypes.ErrLeaseNotFound {
 					if srv.LeaseID, err = r.registerCore(srv.Config); err != nil {
-						fmt.Println("(traefik) etcd registerCore error: ", err)
+						fmt.Println("(traefik) etcd registerCore errors: ", err)
 					}
 				} else {
-					fmt.Println("(traefik) etcd KeepAliveOnce error: ", err)
+					fmt.Println("(traefik) etcd KeepAliveOnce errors: ", err)
 				}
 			}
 		}

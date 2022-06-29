@@ -8,7 +8,7 @@ type Service interface {
 }
 
 var services = []Service{
-	Phanes,
+	User,
 }
 
 func Init() func() {
@@ -30,4 +30,3 @@ func Init() func() {
 		}
 	}
 }
-

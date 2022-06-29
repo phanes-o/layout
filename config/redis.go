@@ -3,7 +3,7 @@ package config
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	log "phanes/collector/logger"
+	log "go-micro.dev/v4/logger"
 )
 
 func initRedis() func() {
