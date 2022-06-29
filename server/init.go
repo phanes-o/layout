@@ -11,7 +11,7 @@ import (
 
 	webServer "phanes/server/web"
 	// example: other server
-	// exampleServer "phanes/server/example_server"
+	// exampleServer "phanes-layout/server/example_server"
 )
 
 var Service micro.Service

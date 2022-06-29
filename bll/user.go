@@ -2,7 +2,7 @@ package bll
 
 import (
 	"context"
-	"github.com/phanes-o/proto/example"
+	"github.com/phanes-o/proto/dto"
 	"github.com/phanes-o/proto/primitive"
 	log "go-micro.dev/v4/logger"
 	"phanes/event"
@@ -26,7 +26,7 @@ func (a *user) init() func() {
 	return func() {}
 }
 
-func (a *user) Create(ctx context.Context, in *example.CreateUserRequest) (err error) {
+func (a *user) Create(ctx context.Context, in *dto.CreateUserRequest) (err error) {
 	u := &entity.User{
 		Username: in.Username,
 		Password: in.Password,

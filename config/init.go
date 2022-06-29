@@ -56,7 +56,7 @@ func Init() func() {
 
 func extractEtcdAddr() error {
 	app := cli.NewApp()
-	app.Name = "phanes"
+	app.Name = "phanes-layout"
 	app.Flags = cmd.DefaultCmd.App().Flags
 	app.Action = func(ctx *cli.Context) error {
 		EtcdAddr = ctx.String("registry_address")

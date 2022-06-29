@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/phanes-o/proto/example"
+	"github.com/phanes-o/proto/dto"
 	"github.com/phanes-o/proto/primitive"
 	"phanes/bll"
 )
@@ -20,7 +20,7 @@ func (a *user) Init(r *gin.RouterGroup) {
 }
 
 func (a *user) register(c *gin.Context) {
-	var user = &example.CreateUserRequest{}
+	var user = &dto.CreateUserRequest{}
 
 	if err := c.ShouldBindJSON(&user); err != nil {
 		return

@@ -1,6 +1,6 @@
 module phanes
 
-go 1.18
+go 1.17
 
 require (
 	github.com/asim/go-micro/plugins/broker/nats/v4 v4.0.0-20220624181847-9960cd1d36c8
@@ -13,7 +13,7 @@ require (
 	github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/phanes-o/proto v0.0.0-20220629024125-60f961f9d5a6
+	github.com/phanes-o/proto v0.0.0-20220629090411-3e1f20d2157d
 	github.com/urfave/cli/v2 v2.3.0
 	go-micro.dev/v4 v4.7.0
 	go.etcd.io/etcd/api/v3 v3.5.0
@@ -78,6 +78,7 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
+	github.com/phanes-o/proto/primitive v0.0.0-20220629050837-32e2a68d8d6d // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
