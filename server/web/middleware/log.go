@@ -10,7 +10,7 @@ import (
 func Log() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
-		log.WithFields(log.Fields{
+		log.WithContext(c.Request.Context()).WithFields(log.Fields{
 			"request": c.Request.URL.String(),
 			"method":  c.Request.Method,
 			"ip":      c.ClientIP(),
@@ -32,7 +32,7 @@ func Log() gin.HandlerFunc {
 						"msg":  err.Error(),
 					})
 				}
-				log.WithFields(log.Fields{
+				log.WithContext(c.Request.Context()).WithFields(log.Fields{
 					"request":    c.Request.URL.String(),
 					"method":     c.Request.Method,
 					"ip":         c.ClientIP(),
@@ -41,7 +41,7 @@ func Log() gin.HandlerFunc {
 				}).Error(err.Error())
 			}
 		} else {
-			log.WithFields(log.Fields{
+			log.WithContext(c.Request.Context()).WithFields(log.Fields{
 				"request":   c.Request.URL.String(),
 				"method":    c.Request.Method,
 				"ip":        c.ClientIP(),

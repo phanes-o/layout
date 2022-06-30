@@ -3,6 +3,22 @@
 []: # Language: markdown
 []: # Path: phanes-layout/README.md
 
+
+### Running prerequisite
+> you must have docker installed, and start the containers which include Postgres, Redis, Etcd, RabbitMQ or Nats.
+1. run `docker-compose up -d` to start the containers if you don't have base service components
+2. modify the /scripts/config.json to application-compliant
+3. run `make config` put /scripts/config.json to etcd, based on you have installed `ectdctl`
+
+### Srart command:
+```shell
+go build -o phanes 
+./phanes --registry=etcd --registry_address=127.0.0.1:2379
+```
+
+[]: # Language: bash
+[]: # Path: phanes-layout/README.md
+
 #### project dir structure description
 - bll business logic layer
 - client provide grpc, http, websocket etc.

@@ -22,19 +22,23 @@ import (
 )
 
 var (
-	webName string
-	webAddr string
-	srv     server.Server
+	webName           string
+	webAddr           string
+	defaultListenAddr = ":7701"
+	srv               server.Server
 )
 
 func Init() micro.Option {
 	webName = config.Conf.Name + "-http"
 
+	if config.Conf.HttpListen != "" {
+		defaultListenAddr = config.Conf.HttpListen
+	}
+
 	srv = http.NewServer(
 		server.Name(webName),
 		server.Version(config.Conf.Version),
-		//server.Address(config.Conf.HttpListen),
-		server.Address(":7701"),
+		server.Address(defaultListenAddr),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
@@ -51,6 +55,9 @@ func Init() micro.Option {
 
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
 	utils.Throw(srv.Start())
+	if config.Conf.Traefik.Enabled {
+		utils.Throw(Register())
+	}
 	return micro.Server(srv)
 }
 
@@ -79,7 +86,7 @@ func Register() error {
 		SrvAddr:   webAddr,
 		Rule:      fmt.Sprintf("Host(`%s`) || PathPrefix(`%s`)", config.Conf.Traefik.Domain, config.Conf.Traefik.Prefix),
 		Prefix:    config.Conf.Traefik.Prefix,
-		EndPoints: []string{"httpc"},
+		EndPoints: []string{"http"},
 	}
 	if strings.ToLower(config.Conf.Env) == model.EnvProd {
 		conf.EndPoints = []string{"https"}

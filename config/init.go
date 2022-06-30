@@ -28,7 +28,7 @@ func Init() func() {
 	if conf, err = config.NewConfig(config.WithSource(etcdSource)); err != nil {
 		utils.Throw(err)
 	}
-	err = conf.Scan(&Conf)
+	utils.Throw(conf.Scan(&Conf))
 
 	watcher, err := conf.Watch()
 	if err != nil {

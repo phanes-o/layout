@@ -117,15 +117,15 @@ func (r *etcdRegistry) build(conf *Config) (map[string]string, error) {
 
 	switch conf.Type {
 	case ReverseTypeHttp:
-		if !strings.HasPrefix(conf.SrvAddr, "httpc") {
+		if !strings.HasPrefix(conf.SrvAddr, "http") {
 			conf.SrvAddr = "http://" + conf.SrvAddr
 		}
-		t = "httpc"
+		t = "http"
 	case ReverseTypeH2c:
 		if !strings.HasPrefix(conf.SrvAddr, "h2c") {
 			conf.SrvAddr = "h2c://" + conf.SrvAddr
 		}
-		t = "httpc"
+		t = "http"
 	case ReverseTypeTcp:
 		t = "tcp"
 	case ReverseTypeUdp:

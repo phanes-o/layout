@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # Redis 服务
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  # PostgreSql 数据库服务
+  postgre:
+    image: postgres:latest
+    restart: always
+#    volumes:
+#      - ${PWD}/postgre/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  # RabbitMQ 服务
+  rabbit:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+
+  # Etcd 服务
+  etcd:
+    restart: always
+    image: 'bitnami/etcd:latest'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:
+      - 2379:2379
+      - 2380:2380
+
+  # Nats 服务（pub/sub）
+  nats:
+    image: nats:latest
+    restart: always
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222

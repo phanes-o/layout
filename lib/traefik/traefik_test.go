@@ -17,7 +17,7 @@ func TestRegister(t *testing.T) {
 		SrvAddr:   "127.0.0.1:6789",
 		Rule:      "Host(`abc.test.com`) || PathPrefix(`/abc`)",
 		Prefix:    "/test",
-		EndPoints: []string{"httpc"},
+		EndPoints: []string{"http"},
 	}
 	e := Register(conf)
 	if e != nil {

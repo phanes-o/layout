@@ -43,7 +43,8 @@ type Config struct {
 	} `json:"broker"`
 
 	Traefik struct {
-		Domain string `json:"domain"`
-		Prefix string `json:"prefix"`
+		Enabled bool   `json:"enabled"`
+		Domain  string `json:"domain"`
+		Prefix  string `json:"prefix"`
 	} `json:"traefik"`
 }
