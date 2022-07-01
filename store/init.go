@@ -1,13 +1,34 @@
 package store
 
-import "phanes/store/postgres"
-
-var (
-	User IUser
+import (
+	log "phanes/collector/logger"
+	"phanes/config"
+	"phanes/store/mysql"
+	"phanes/store/postgres"
+	"phanes/store/redis"
 )
 
 func Init() func() {
-	postgres.Init()
+	var cancels = make([]func(), 0)
 
-	return func() {}
+	if len(config.Conf.DB) > 0 {
+		for _, db := range config.Conf.DB {
+			switch db.Type {
+			case "mysql":
+				cancels = append(cancels, mysql.Init(db.Addr))
+			case "postgres":
+				cancels = append(cancels, postgres.Init(db.Addr))
+			case "redis":
+				cancels = append(cancels, redis.Init(db.Addr, db.Pwd))
+			default:
+				log.Error("unknown db type: ", db.Type)
+			}
+		}
+	}
+
+	return func() {
+		for _, cancel := range cancels {
+			cancel()
+		}
+	}
 }

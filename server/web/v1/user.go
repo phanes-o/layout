@@ -32,6 +32,7 @@ func (a *user) register(c *gin.Context) {
 		c.Error(errors.BadRequest.New("username is required"))
 		return
 	}
+
 	if u.Password == "" {
 		c.Error(errors.BadRequest.New("password is required"))
 		return

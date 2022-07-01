@@ -1,8 +1,8 @@
-package postgres
+package mysql
 
 import (
 	"database/sql"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	log "phanes/collector/logger"
 )
@@ -15,7 +15,7 @@ func Init(connectAddr string) func() {
 		sqlDB *sql.DB
 	)
 
-	if db, err = gorm.Open(postgres.Open(connectAddr), &gorm.Config{}); err != nil {
+	if db, err = gorm.Open(mysql.Open(connectAddr), &gorm.Config{}); err != nil {
 		log.Fatal(err)
 	}
 	if sqlDB, err = db.DB(); err != nil {

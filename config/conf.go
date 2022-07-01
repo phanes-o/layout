@@ -1,14 +1,9 @@
 package config
 
-import (
-	"github.com/go-redis/redis/v8"
-	"gorm.io/gorm"
-)
+import "github.com/go-redis/redis/v8"
 
 var (
-	KV *redis.Client
-	DB *gorm.DB
-
+	KV       *redis.Client
 	Conf     = &Config{}
 	EtcdAddr = ""
 	ExitC    = make(chan bool)
@@ -23,7 +18,12 @@ type Config struct {
 	HttpListen string `json:"http_listen"`
 	Jaeger     string `json:"jaeger"`
 
-	Postgres string `json:"postgres"`
+	DB []struct {
+		Addr string `json:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
+		Type string `json:"type"` // postgres, mysql, sqlite, mongo
+		User string `json:"user"` // if addr not like Addr example or other need, you should set
+		Pwd  string `json:"pwd"`
+	} `json:"db"`
 
 	Log struct {
 		FileName string `json:"file_name"`

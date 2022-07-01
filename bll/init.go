@@ -7,6 +7,7 @@ type Service interface {
 	init() func()
 }
 
+// register service
 var services = []Service{
 	User,
 }

@@ -1,16 +1,18 @@
-package config
+package redis
 
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	log "go-micro.dev/v4/logger"
+	log "phanes/collector/logger"
 )
 
-func initRedis() func() {
+var KV *redis.Client
+
+func Init(connectAddr, pwd string) func() {
 	client := redis.NewClient(&redis.Options{
-		Addr:       Conf.Redis.Addr,
-		Password:   Conf.Redis.Pwd,
-		DB:         1,
+		Addr:       connectAddr,
+		Password:   pwd,
+		DB:         0,
 		PoolSize:   30,
 		MaxRetries: 5,
 	})
