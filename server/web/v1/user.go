@@ -2,9 +2,10 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/phanes-o/proto/base"
 	"github.com/phanes-o/proto/dto"
-	"github.com/phanes-o/proto/primitive"
 	"phanes/bll"
+	"phanes/errors"
 )
 
 var User = &user{}
@@ -20,14 +21,22 @@ func (a *user) Init(r *gin.RouterGroup) {
 }
 
 func (a *user) register(c *gin.Context) {
-	var user = &dto.CreateUserRequest{}
+	var u = &dto.CreateUserRequest{}
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&u); err != nil {
 		c.Error(err)
 		return
 	}
 
-	if err := bll.User.Create(c.Request.Context(), user); err != nil {
+	if u.Username == "" {
+		c.Error(errors.BadRequest.New("username is required"))
+		return
+	}
+	if u.Password == "" {
+		c.Error(errors.BadRequest.New("password is required"))
+		return
+	}
+	if err := bll.User.Create(c.Request.Context(), u); err != nil {
 		c.Error(err)
 		return
 	}
@@ -38,7 +47,7 @@ func (a *user) register(c *gin.Context) {
 }
 
 func (a *user) delete(c *gin.Context) {
-	d := &primitive.Int64{}
+	d := &base.Int64{}
 
 	if err := c.ShouldBindJSON(&d); err != nil {
 		c.Error(err)

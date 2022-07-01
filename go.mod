@@ -13,7 +13,7 @@ require (
 	github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/phanes-o/proto v0.0.0-20220629090411-3e1f20d2157d
+	github.com/phanes-o/proto v0.0.0-20220701033122-9b88971eb0cd
 	github.com/urfave/cli/v2 v2.3.0
 	go-micro.dev/v4 v4.7.0
 	go.etcd.io/etcd/api/v3 v3.5.0

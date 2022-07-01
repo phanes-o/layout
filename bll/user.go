@@ -2,8 +2,8 @@ package bll
 
 import (
 	"context"
+	"github.com/phanes-o/proto/base"
 	"github.com/phanes-o/proto/dto"
-	"github.com/phanes-o/proto/primitive"
 	log "go-micro.dev/v4/logger"
 	"phanes/errors"
 	"phanes/event"
@@ -41,6 +41,6 @@ func (a *user) Create(ctx context.Context, in *dto.CreateUserRequest) (err error
 	return nil
 }
 
-func (a *user) Delete(ctx context.Context, p *primitive.Int64) error {
+func (a *user) Delete(ctx context.Context, p *base.Int64) error {
 	return a.user.Delete(p.Value)
 }

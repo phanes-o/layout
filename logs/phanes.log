@@ -11,3 +11,7 @@
 {"level":"info","time":"2022-06-29T21:49:16.188+0800","caller":"/Users/du/go/src/github.com/phanes-o/phanes-layout/main.go:46","msg":"[[finished to init all component]]"}
 {"level":"info","time":"2022-06-29T21:49:20.172+0800","caller":"/Users/du/go/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173","msg":"[request]","ip":"127.0.0.1","request":"/v1/user/register","method":"POST"}
 {"level":"error","time":"2022-06-29T21:49:20.179+0800","caller":"/Users/du/go/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173","msg":"[user create failed: ERROR: relation \"users\" does not exist (SQLSTATE 42P01)]","method":"POST","ip":"127.0.0.1","time_span":"6.428084ms","request":"/v1/user/register"}
+{"level":"info","time":"2022-06-30T18:45:46.232+0800","caller":"/Users/du/go/src/github.com/phanes-o/phanes-layout/main.go:46","msg":"[[finished to init all component]]"}
+{"level":"info","time":"2022-06-30T18:45:55.399+0800","caller":"/Users/du/go/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173","msg":"[request]","request":"/v1/user/register","method":"POST","ip":"127.0.0.1"}
+{"level":"error","time":"2022-06-30T18:45:55.403+0800","caller":"/Users/du/go/pkg/mod/github.com/gin-gonic/gin@v1.8.1/context.go:173","msg":"[bad request: password is required]","method":"POST","ip":"127.0.0.1","error_type":"none","time_span":"4.094225ms","request":"/v1/user/register"}
+{"level":"info","time":"2022-07-01T11:34:59.047+0800","caller":"/Users/du/go/src/github.com/phanes-o/phanes-layout/main.go:46","msg":"[[finished to init all component]]"}

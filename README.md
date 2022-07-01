@@ -1,8 +1,7 @@
 ### phanes-layout Document
-
-[]: # Language: markdown
-[]: # Path: phanes-layout/README.md
-
+    
+    []: # Language: markdown
+    []: # Path: phanes-layout/README.md
 
 ### Running prerequisite
 > you must have docker installed, and start the containers which include Postgres, Redis, Etcd, RabbitMQ or Nats.
@@ -15,9 +14,6 @@
 go build -o phanes 
 ./phanes --registry=etcd --registry_address=127.0.0.1:2379
 ```
-
-[]: # Language: bash
-[]: # Path: phanes-layout/README.md
 
 #### project dir structure description
 - bll business logic layer

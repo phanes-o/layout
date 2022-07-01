@@ -20,6 +20,7 @@ func Init() micro.Option {
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
+		server.WrapHandler(middleware.ServerTraceWrapper()),
 		server.WrapHandler(middleware.Log()),
 	)
 	// register grpc services

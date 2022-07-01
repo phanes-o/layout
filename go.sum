@@ -602,6 +602,8 @@ github.com/phanes-o/proto v0.0.0-20220629085833-2030f8b66cec h1:0+eSe44ClUKg/FFS
 github.com/phanes-o/proto v0.0.0-20220629085833-2030f8b66cec/go.mod h1:xNlaEXxj19ie6tccBFQxme65q5tOM6c6jhI073upsh4=
 github.com/phanes-o/proto v0.0.0-20220629090411-3e1f20d2157d h1:wXFSKPBlATa8sf112f3j7p8qtKGzHGfMeU1GdlalwE4=
 github.com/phanes-o/proto v0.0.0-20220629090411-3e1f20d2157d/go.mod h1:xNlaEXxj19ie6tccBFQxme65q5tOM6c6jhI073upsh4=
+github.com/phanes-o/proto v0.0.0-20220701033122-9b88971eb0cd h1:dqeDAsqGUXwy6UmpYRozZrijr7+BIFNr3Bn8B7k+Gg4=
+github.com/phanes-o/proto v0.0.0-20220701033122-9b88971eb0cd/go.mod h1:s+y8+Ap2VFznTwQx46e7JOqVHuAVDNlUiihvRaDxvs0=
 github.com/phanes-o/proto/primitive v0.0.0-20220629050837-32e2a68d8d6d h1:W+qpj05PD+O0ADC27is2CqPvmelcWnctUnt3nWuv+/A=
 github.com/phanes-o/proto/primitive v0.0.0-20220629050837-32e2a68d8d6d/go.mod h1:myd2CqfF6ye32wq6o5ISbsSVjaBWCMLMOVrPH1UnxZI=
 github.com/pierrec/lz4 v2.0.5+incompatible/go.mod h1:pdkljMzZIN41W+lC3N2tnIh5sFi+IEE17M5jbnwPHcY=
