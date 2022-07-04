@@ -5,9 +5,11 @@ import (
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4"
 	"go-micro.dev/v4"
+	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/registry"
 	"phanes/config"
 	grpcServer "phanes/server/grpc"
+	"phanes/server/grpc/middleware"
 
 	webServer "phanes/server/web"
 	// example: other server
@@ -22,7 +24,8 @@ func Init() func() {
 	Service.Init(
 		micro.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
 		micro.AfterStop(AfterExit),
-		micro.Client(grpc.NewClient()),
+		// client trace wrapper
+		micro.Client(grpc.NewClient(client.WrapCall(middleware.ClientTraceWrapper()))),
 		// choose you needed wrapper
 		micro.WrapClient(roundrobin.NewClientWrapper()),
 		webServer.Init(),

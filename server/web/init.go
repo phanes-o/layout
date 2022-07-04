@@ -24,7 +24,7 @@ import (
 var (
 	webName           string
 	webAddr           string
-	defaultListenAddr = ":7701"
+	defaultListenAddr = ":7771"
 	srv               server.Server
 )
 

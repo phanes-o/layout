@@ -2,7 +2,21 @@
   "name": "phanes",
   "env": "dev",
   "version": "0.1.0",
-  "jaeger": "127.0.0.1:6831",
+  "http_listen": ":7771",
+
+  "collect": {
+    "log": {
+      "file_name": "admin",
+      "redis_key": "log_list"
+    },
+    "trace": {
+      "addr": ""
+    },
+    "metric": {
+      "addr": ""
+    }
+  },
+
   "db": [
     {
       "type": "postgre",
@@ -17,20 +31,19 @@
         "pwd": ""
     }
   ],
-  "log": {
-    "file_name": "phanes",
-    "redis_key": "log_list"
-  },
+
   "proxy": {
     "domain": "http://127.0.0.1",
     "prefix": "/phanes"
   },
+
   "broker": {
     "type": "rabbitmq",
     "addr": "amqp://coco:kk123123123@127.0.0.1:5672/",
     "user": "",
     "pwd": ""
   },
+
   "traefik": {
     "enabled": false,
     "domain": "test.com",

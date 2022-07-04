@@ -18,17 +18,25 @@ type Config struct {
 	HttpListen string `json:"http_listen"`
 	Jaeger     string `json:"jaeger"`
 
+	Collect struct {
+		Log struct {
+			FileName string `json:"file_name"`
+			RedisKey string `json:"redis_key"`
+		} `json:"log"`
+		Trace struct {
+			Addr string `json:"addr"`
+		} `json:"trace"`
+		Metric struct {
+			Addr string `json:"addr"`
+		} `json:"metric"`
+	} `json:"collect"`
+
 	DB []struct {
 		Addr string `json:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
 		Type string `json:"type"` // postgres, mysql, sqlite, mongo
 		User string `json:"user"` // if addr not like Addr example or other need, you should set
 		Pwd  string `json:"pwd"`
 	} `json:"db"`
-
-	Log struct {
-		FileName string `json:"file_name"`
-		RedisKey string `json:"redis_key"`
-	} `json:"log"`
 
 	Redis struct {
 		Addr string `json:"addr"`

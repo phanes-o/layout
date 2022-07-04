@@ -7,6 +7,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	"go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
+	"phanes/config"
 	"phanes/utils"
 )
 
@@ -20,9 +21,13 @@ func Init() {
 	otel.SetTracerProvider(tp)
 }
 
+var defaultAddr = "http://localhost:14268/api/traces"
+
 func JaegerTraceProvider() (*trace.TracerProvider, error) {
-	// todo: use config to set service name, service ID, jaeger url etc
-	exporter, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint("http://localhost:14268/api/traces")))
+	if config.Conf.Collect.Trace.Addr != "" {
+		defaultAddr = config.Conf.Collect.Trace.Addr
+	}
+	exporter, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(defaultAddr)))
 	if err != nil {
 		return nil, err
 	}
@@ -31,8 +36,8 @@ func JaegerTraceProvider() (*trace.TracerProvider, error) {
 		trace.WithBatcher(exporter),
 		trace.WithResource(resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("phanes"),
-			attribute.String("environment", "production"),
+			semconv.ServiceNameKey.String(config.Conf.Name),
+			attribute.String("environment", config.Conf.Env),
 			attribute.Int64("ID", 1),
 		)),
 	)
