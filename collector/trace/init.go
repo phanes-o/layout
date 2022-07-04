@@ -11,7 +11,7 @@ import (
 	"phanes/utils"
 )
 
-func Init() {
+func Init() func() {
 	tp, err := JaegerTraceProvider()
 	if err != nil {
 		utils.Throw(err)
@@ -19,6 +19,7 @@ func Init() {
 	// Register our TracerProvider as the global so any imported
 	// instrumentation in the future will default to using it.
 	otel.SetTracerProvider(tp)
+	return func() {}
 }
 
 var defaultAddr = "http://localhost:14268/api/traces"

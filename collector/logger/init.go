@@ -9,7 +9,7 @@ import (
 
 func Init() func() {
 	var (
-		l       = config.Conf.Log
+		l       = config.Conf.Collect.Log
 		writers = make([]io.Writer, 0, 0)
 	)
 	if l.FileName == "" && l.RedisKey == "" {

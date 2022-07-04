@@ -1,12 +1,16 @@
 package collector
 
-import "phanes/collector/logger"
+import (
+	"phanes/collector/logger"
+	"phanes/collector/trace"
+)
 
 func Init() func() {
 	var (
 		cancels = make([]func(), 0)
 
 		inits = []func() func(){
+			trace.Init,
 			logger.Init,
 		}
 	)

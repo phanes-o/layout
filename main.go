@@ -22,10 +22,10 @@ func main() {
 		bootstraps = []InitFunc{
 			config.Init,
 			collector.Init,
-			store.Init,
-			bll.Init,
 			server.Init,
 			client.Init,
+			store.Init,
+			bll.Init,
 		}
 	)
 
