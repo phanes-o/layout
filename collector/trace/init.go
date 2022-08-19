@@ -39,7 +39,7 @@ func JaegerTraceProvider() (*trace.TracerProvider, error) {
 			semconv.SchemaURL,
 			semconv.ServiceNameKey.String(config.Conf.Name),
 			attribute.String("environment", config.Conf.Env),
-			attribute.Int64("ID", 1),
+			attribute.String("version", config.Conf.Version),
 		)),
 	)
 	return tp, nil

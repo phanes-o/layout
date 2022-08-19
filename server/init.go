@@ -16,12 +16,10 @@ import (
 	// exampleServer "phanes-layout/server/example_server"
 )
 
-var Service micro.Service
-
 func Init() func() {
-	Service = micro.NewService()
+	config.MicroService = micro.NewService()
 
-	Service.Init(
+	config.MicroService.Init(
 		micro.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
 		micro.AfterStop(AfterExit),
 		// client trace wrapper

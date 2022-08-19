@@ -1,13 +1,17 @@
 package config
 
-import "github.com/go-redis/redis/v8"
+import (
+	"github.com/go-redis/redis/v8"
+	"go-micro.dev/v4"
+)
 
 var (
-	KV       *redis.Client
-	Conf     = &Config{}
-	EtcdAddr = ""
-	ExitC    = make(chan bool)
-	prefix   = "/phanes/config/hello"
+	KV           *redis.Client
+	Conf         = &Config{}
+	MicroService micro.Service
+	EtcdAddr     = ""
+	ExitC        = make(chan bool)
+	prefix       = "/phanes/config/hello"
 )
 
 type Config struct {

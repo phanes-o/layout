@@ -4,6 +4,6 @@ package grpc
 //var UserClient example.UserService
 
 func Init() func() {
-	//UserClient = example.NewUserService("example.UserService", server.Service.Client())
+	//UserClient = example.NewUserService("example.UserService", config.MicroService.Client())
 	return func() {}
 }

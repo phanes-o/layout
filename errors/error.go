@@ -2,6 +2,7 @@ package errors
 
 import (
 	"fmt"
+
 	"github.com/pkg/errors"
 )
 
@@ -19,7 +20,7 @@ func (c customError) Error() string {
 func (t Type) New(msg string) error {
 	return customError{
 		errType:       t,
-		originalError: errors.New(fmt.Sprintf("%s: %s", t.String(), msg)),
+		originalError: errors.New(msg),
 	}
 }
 
@@ -36,6 +37,7 @@ func (t Type) Warpf(err error, msg string, args ...interface{}) error {
 		originalError: errors.Wrapf(err, msg, args...),
 	}
 }
+
 func New(msg string) error {
 	return customError{errType: None, originalError: errors.New(msg)}
 }
