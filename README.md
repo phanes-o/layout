@@ -9,7 +9,7 @@
 2. modify the /scripts/config.json to application-compliant
 3. run `make config` put /scripts/config.json to etcd, based on you have installed `ectdctl`
 
-### Srart command:
+### Start command:
 ```shell
 go build -o phanes 
 ./phanes --registry=etcd --registry_address=127.0.0.1:2379
