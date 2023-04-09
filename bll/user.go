@@ -2,6 +2,7 @@ package bll
 
 import (
 	"context"
+
 	"github.com/phanes-o/proto/base"
 	"github.com/phanes-o/proto/dto"
 	log "go-micro.dev/v4/logger"
@@ -16,10 +17,6 @@ var User = &user{}
 
 type user struct {
 	user store.IUser
-}
-
-func (a *user) onEvent(ed *event.Data) {
-
 }
 
 func (a *user) init() func() {
@@ -38,6 +35,8 @@ func (a *user) Create(ctx context.Context, in *dto.CreateUserRequest) (err error
 		return errors.Wrap(err, "user create failed")
 	}
 
+	// publish event to event bus
+	event.Bus.PublishAsync(event.ExampleEvent, u.Username)
 	return nil
 }
 

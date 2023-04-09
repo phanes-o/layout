@@ -1,8 +1,7 @@
 package event
 
-type Type int
+type Event string
 
-type Data struct {
-	Type Type
-	Data interface{}
-}
+const (
+	ExampleEvent Event = "example_event"
+)

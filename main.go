@@ -3,11 +3,13 @@ package main
 import (
 	"os"
 	"os/signal"
+
 	"phanes/bll"
 	"phanes/client"
 	"phanes/collector"
 	log "phanes/collector/logger"
 	"phanes/config"
+	"phanes/event"
 	"phanes/server"
 	"phanes/store"
 )
@@ -22,6 +24,7 @@ func main() {
 		bootstraps = []InitFunc{
 			config.Init,
 			collector.Init,
+			event.Init,
 			server.Init,
 			client.Init,
 			store.Init,

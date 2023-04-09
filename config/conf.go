@@ -24,8 +24,13 @@ type Config struct {
 
 	Collect struct {
 		Log struct {
+			LogLevel uint8  `json:"log_level"` // log level support -1:5
 			FileName string `json:"file_name"`
-			RedisKey string `json:"redis_key"`
+			Redis    struct {
+				RedisKey string `json:"redis_key"`
+				Addr     string `json:"addr"`
+				Pwd      string `json:"pwd"`
+			} `json:"redis"`
 		} `json:"log"`
 		Trace struct {
 			Addr string `json:"addr"`
@@ -41,11 +46,6 @@ type Config struct {
 		User string `json:"user"` // if addr not like Addr example or other need, you should set
 		Pwd  string `json:"pwd"`
 	} `json:"db"`
-
-	Redis struct {
-		Addr string `json:"addr"`
-		Pwd  string `json:"pwd"`
-	} `json:"redis"`
 
 	Broker struct {
 		Type string `json:"type"` // support: rabbitmq, nats

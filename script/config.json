@@ -7,7 +7,11 @@
   "collect": {
     "log": {
       "file_name": "admin",
-      "redis_key": "log_list"
+      "redis": {
+        "redis_key": "log_list",
+        "addr": "",
+        "pwd": ""
+      }
     },
     "trace": {
       "addr": ""

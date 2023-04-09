@@ -50,6 +50,10 @@ func Wrap(err error, msg string) error {
 	return Wrapf(err, msg)
 }
 
+func Is(err error, target error) bool {
+	return errors.Is(err, target)
+}
+
 func Cause(err error) error {
 	return errors.Cause(err)
 }

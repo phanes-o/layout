@@ -2,14 +2,18 @@ package config
 
 import (
 	"context"
+
 	"github.com/go-redis/redis/v8"
 	log "go-micro.dev/v4/logger"
 )
 
 func initRedis() func() {
+	if Conf.Collect.Log.Redis.RedisKey == "" && Conf.Collect.Log.Redis.Addr == "" {
+		return func() {}
+	}
 	client := redis.NewClient(&redis.Options{
-		Addr:       Conf.Redis.Addr,
-		Password:   Conf.Redis.Pwd,
+		Addr:       Conf.Collect.Log.Redis.Addr,
+		Password:   Conf.Collect.Log.Redis.Pwd,
 		DB:         1,
 		PoolSize:   30,
 		MaxRetries: 5,
