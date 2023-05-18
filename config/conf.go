@@ -7,7 +7,7 @@ import (
 
 var (
 	KV           *redis.Client
-	Conf         = &Config{}
+	Conf         *Config
 	MicroService micro.Service
 	EtcdAddr     = ""
 	ExitC        = make(chan bool)
@@ -15,48 +15,49 @@ var (
 )
 
 type Config struct {
-	Name    string `json:"name"`
-	Env     string `json:"env"`
-	Version string `json:"version"`
-
-	HttpListen string `json:"http_listen"`
-	Jaeger     string `json:"jaeger"`
+	Base struct {
+		Name       string `json:"name" yaml:"name" toml:"name"`
+		Env        string `json:"env" yaml:"env" toml:"env"`
+		Version    string `json:"version" yaml:"version" toml:"version"`
+		HttpListen string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
+	} `json:"base" yaml:"base" toml:"base"`
 
 	Collect struct {
 		Log struct {
-			LogLevel uint8  `json:"log_level"` // log level support -1:5
-			FileName string `json:"file_name"`
+			LogLevel uint8  `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
+			Prefix   string `json:"prefix" yaml:"prefix" toml:"prefix"`
+			FileName string `json:"file_name"  yaml:"file_name" toml:"file_name"`
 			Redis    struct {
-				RedisKey string `json:"redis_key"`
-				Addr     string `json:"addr"`
-				Pwd      string `json:"pwd"`
-			} `json:"redis"`
-		} `json:"log"`
+				RedisKey string `json:"redis_key" yaml:"redis_key" toml:"redis_key`
+				Addr     string `json:"addr" yaml:"addr" toml:"addr"`
+				Pwd      string `json:"pwd" yaml:"pwd" toml:"pwd"`
+			} `json:"redis" yaml:"redis" toml:"redis"`
+		} `json:"log" yaml:"log" toml:"log"`
 		Trace struct {
-			Addr string `json:"addr"`
-		} `json:"trace"`
+			Addr string `json:"addr" yaml:"addr" toml:"addr"`
+		} `json:"trace" yaml:"trace" toml:"trace"`
 		Metric struct {
-			Addr string `json:"addr"`
-		} `json:"metric"`
-	} `json:"collect"`
+			Addr string `json:"addr" yaml:"addr" toml:"addr"`
+		} `json:"metric" yaml:"metric" toml:"metric"`
+	} `json:"collect" yaml:"collect" toml:"collect"`
 
 	DB []struct {
-		Addr string `json:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
-		Type string `json:"type"` // postgres, mysql, sqlite, mongo
-		User string `json:"user"` // if addr not like Addr example or other need, you should set
-		Pwd  string `json:"pwd"`
-	} `json:"db"`
+		Addr string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
+		Type string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
+		User string `json:"user" yaml:"user" toml:"user"` // if addr not like Addr example or other need, you should set
+		Pwd  string `json:"pwd" yaml:"pwd" toml:"pwd"`
+	} `json:"db" yaml:"db" toml:"db"`
 
 	Broker struct {
-		Type string `json:"type"` // support: rabbitmq, nats
-		Addr string `json:"addr"`
-		User string `json:"user"`
-		Pwd  string `json:"pwd"`
-	} `json:"broker"`
+		Type string `json:"type" yaml:"type" toml:"type"` // support: rabbitmq, nats
+		Addr string `json:"addr" yaml:"addr" toml:"addr"`
+		User string `json:"user" yaml:"user" toml:"user"`
+		Pwd  string `json:"pwd" yaml:"pwd" toml:"pwd"`
+	} `json:"broker" yaml:"broker" toml:"broker"`
 
 	Traefik struct {
-		Enabled bool   `json:"enabled"`
-		Domain  string `json:"domain"`
-		Prefix  string `json:"prefix"`
-	} `json:"traefik"`
+		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+		Domain  string `json:"domain" yaml:"domain" toml:"domain"`
+		Prefix  string `json:"prefix" yaml:"prefix" toml:"prefix"`
+	} `json:"traefik" yaml:"traefik" toml:"traefik"`
 }

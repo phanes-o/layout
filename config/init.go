@@ -1,34 +1,60 @@
 package config
 
 import (
+	"log"
+	"os"
+	"time"
+
+	"github.com/asim/go-micro/plugins/config/encoder/toml/v4"
+	"github.com/asim/go-micro/plugins/config/encoder/yaml/v4"
 	"github.com/asim/go-micro/plugins/config/source/etcd/v4"
 	"github.com/urfave/cli/v2"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/config"
-	"log"
-	"os"
+	"go-micro.dev/v4/config/encoder"
+	ejson "go-micro.dev/v4/config/encoder/json"
+	"go-micro.dev/v4/config/reader"
+	"go-micro.dev/v4/config/reader/json"
+	"go-micro.dev/v4/config/source"
+	"phanes/lib/traefik"
+	"phanes/model"
 	"phanes/utils"
-	"time"
 )
 
 func Init() func() {
 	var (
-		conf    config.Config
-		err     error
-		cancels = make([]func(), 0)
+		e              encoder.Encoder
+		err            error
+		conf           config.Config
+		cancels        = make([]func(), 0)
+		configFileType = "yaml"
 	)
+
+	switch configFileType {
+	case model.ConfigFileTypeJson:
+		e = ejson.NewEncoder()
+	case model.ConfigFileTypeYaml:
+		e = yaml.NewEncoder()
+	case model.ConfigFileTypeToml:
+		e = toml.NewEncoder()
+	}
+
+	Conf = &Config{}
 	utils.Throw(extractEtcdAddr())
 	etcdSource := etcd.NewSource(
 		etcd.WithAddress(EtcdAddr),
 		etcd.WithPrefix(prefix),
+		source.WithEncoder(e),
 		etcd.StripPrefix(true),
 		etcd.WithDialTimeout(time.Second*time.Duration(10)),
 	)
 	// Create new config
-	if conf, err = config.NewConfig(config.WithSource(etcdSource)); err != nil {
-		utils.Throw(err)
-	}
-	utils.Throw(conf.Scan(&Conf))
+	conf, err = config.NewConfig(
+		config.WithSource(etcdSource),
+		config.WithReader(json.NewReader(reader.WithEncoder(e))),
+	)
+	utils.Throw(err)
+	utils.Throw(conf.Scan(Conf))
 
 	watcher, err := conf.Watch()
 	if err != nil {
@@ -50,10 +76,9 @@ func Init() func() {
 		}
 	}()
 
+	utils.Throw(traefik.Init(EtcdAddr))
 	// init others
-	inits := []func() func(){
-		initRedis,
-	}
+	inits := []func() func(){}
 	for _, init := range inits {
 		cancels = append(cancels, init())
 	}

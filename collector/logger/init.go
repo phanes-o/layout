@@ -13,15 +13,12 @@ func Init() func() {
 		l       = config.Conf.Collect.Log
 		writers = make([]io.Writer, 0, 0)
 	)
-	if l.FileName == "" && l.Redis.RedisKey == "" {
+	if l.FileName == "" {
 		panic("no log storage target")
 	}
 
 	if l.FileName != "" {
 		writers = append(writers, FileOutputWriter("./logs", l.FileName, 50, 3))
-	}
-	if l.Redis.RedisKey != "" {
-		writers = append(writers, RedisOutputWriter(config.KV, l.Redis.RedisKey))
 	}
 	writers = append(writers, os.Stderr)
 

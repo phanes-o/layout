@@ -1,6 +1,8 @@
 package grpc
 
 import (
+	"time"
+
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/server/grpc/v4"
 	"go-micro.dev/v4"
@@ -10,13 +12,12 @@ import (
 	"phanes/server/grpc/middleware"
 	v1 "phanes/server/grpc/v1"
 	"phanes/utils"
-	"time"
 )
 
 func Init() micro.Option {
 	srv := grpc.NewServer(
-		server.Name(config.Conf.Name+"-grpc"),
-		server.Version(config.Conf.Version),
+		server.Name(config.Conf.Base.Name+"-grpc"),
+		server.Version(config.Conf.Base.Version),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),

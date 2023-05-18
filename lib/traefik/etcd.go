@@ -3,6 +3,7 @@ package traefik
 import (
 	"context"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 	"sync"
@@ -31,11 +32,30 @@ type etcdRegistry struct {
 	srvs   map[string]*etcdSrv
 }
 
-func (r *etcdRegistry) init(addr string) error {
-	var err error
+func (r *etcdRegistry) init(addrs ...string) error {
+	var (
+		err       error
+		endpoints []string
+	)
+
+	for _, a := range addrs {
+		addr, port, err := net.SplitHostPort(a)
+		if ae, ok := err.(*net.AddrError); ok && ae.Err == "missing port in address" {
+			port = "2379"
+			addr = a
+			endpoints = append(endpoints, fmt.Sprintf("%s:%s", addr, port))
+		} else if err == nil {
+			endpoints = append(endpoints, fmt.Sprintf("%s:%s", addr, port))
+		}
+	}
+
+	if len(endpoints) == 0 {
+		endpoints = []string{"localhost:2379"}
+	}
+
 	r.cli, err = clientv3.New(clientv3.Config{
-		Endpoints:   []string{addr},
-		DialTimeout: time.Minute,
+		Endpoints:   endpoints,
+		DialTimeout: time.Second * 3,
 	})
 	if err == nil {
 		go r.loop()
@@ -49,10 +69,10 @@ func (r *etcdRegistry) loop() {
 			if _, err := r.cli.KeepAliveOnce(context.Background(), srv.LeaseID); err != nil {
 				if err == rpctypes.ErrLeaseNotFound {
 					if srv.LeaseID, err = r.registerCore(srv.Config); err != nil {
-						fmt.Println("(traefik) etcd registerCore errors: ", err)
+						fmt.Println("(/traefik) etcd registerCore errors: ", err)
 					}
 				} else {
-					fmt.Println("(traefik) etcd KeepAliveOnce errors: ", err)
+					fmt.Println("(/traefik) etcd KeepAliveOnce errors: ", err)
 				}
 			}
 		}
@@ -79,6 +99,8 @@ func (r *etcdRegistry) register(conf *Config) error {
 	if lid, err = r.registerCore(conf); err == nil {
 		r.srvs[conf.SrvName] = &etcdSrv{Config: conf, LeaseID: lid}
 	}
+
+	fmt.Println("Register /traefik result: ", err)
 
 	return err
 }
@@ -133,30 +155,30 @@ func (r *etcdRegistry) build(conf *Config) (map[string]string, error) {
 	}
 
 	dict := map[string]string{
-		"traefik/enable": "true",
-		fmt.Sprintf("traefik/%s/routers/%v/rule", t, conf.SrvName):    conf.Rule,
-		fmt.Sprintf("traefik/%s/routers/%v/service", t, conf.SrvName): srv,
+		"/traefik/enable": "true",
+		fmt.Sprintf("/traefik/%s/routers/%v/rule", t, conf.SrvName):    conf.Rule,
+		fmt.Sprintf("/traefik/%s/routers/%v/service", t, conf.SrvName): srv,
 	}
 
 	for i, ep := range conf.EndPoints {
 		switch conf.Type {
 		case ReverseTypeUdp:
 			fmt.Println(t, conf.SrvName, i, ep)
-			dict[fmt.Sprintf("traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
 		case ReverseTypeTcp:
-			dict[fmt.Sprintf("traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
 		case ReverseTypeHttp, ReverseTypeH2c:
-			dict[fmt.Sprintf("traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
 		}
 	}
 
 	if len(conf.Prefix) > 0 {
 		prefix := fmt.Sprintf("%v-prefix", conf.SrvName)
-		dict[fmt.Sprintf("traefik/%s/routers/%v/middlewares/0", t, conf.SrvName)] = prefix
-		dict[fmt.Sprintf("traefik/%s/middlewares/%v/stripPrefix/prefixes/0", t, prefix)] = conf.Prefix
+		dict[fmt.Sprintf("/traefik/%s/routers/%v/middlewares/0", t, conf.SrvName)] = prefix
+		dict[fmt.Sprintf("/traefik/%s/middlewares/%v/stripPrefix/prefixes/0", t, prefix)] = conf.Prefix
 	}
 
-	urlPrefix := fmt.Sprintf("traefik/%s/services/%v/loadbalancer/servers/", t, srv)
+	urlPrefix := fmt.Sprintf("/traefik/%s/services/%v/loadbalancer/servers/", t, srv)
 	urlResp, err := r.cli.Get(context.Background(), urlPrefix, clientv3.WithPrefix())
 	if err != nil {
 		return nil, err
@@ -178,15 +200,15 @@ func (r *etcdRegistry) build(conf *Config) (map[string]string, error) {
 	}
 	switch conf.Type {
 	case ReverseTypeUdp:
-		dict[fmt.Sprintf("traefik/udp/services/%v/loadbalancer/servers/%v/address", srv, index)] = conf.SrvAddr
+		dict[fmt.Sprintf("/traefik/udp/services/%v/loadbalancer/servers/%v/address", srv, index)] = conf.SrvAddr
 		fmt.Println(dict)
 	case ReverseTypeTcp:
-		dict[fmt.Sprintf("traefik/tcp/services/%v/loadbalancer/servers/%v/address", srv, index)] = conf.SrvAddr
+		dict[fmt.Sprintf("/traefik/tcp/services/%v/loadbalancer/servers/%v/address", srv, index)] = conf.SrvAddr
 	case ReverseTypeHttp:
-		dict[fmt.Sprintf("traefik/%s/services/%v/loadbalancer/servers/%v/url", t, srv, index)] = conf.SrvAddr
+		dict[fmt.Sprintf("/traefik/%s/services/%v/loadbalancer/servers/%v/url", t, srv, index)] = conf.SrvAddr
 	case ReverseTypeH2c:
-		dict[fmt.Sprintf("traefik/%s/services/%v/loadbalancer/servers/%v/url", t, srv, index)] = conf.SrvAddr
-		dict[fmt.Sprintf("traefik/%s/services/%v/loadbalancer/healthcheck/scheme", t, srv)] = "h2c"
+		dict[fmt.Sprintf("/traefik/%s/services/%v/loadbalancer/servers/%v/url", t, srv, index)] = conf.SrvAddr
+		dict[fmt.Sprintf("/traefik/%s/services/%v/loadbalancer/healthcheck/scheme", t, srv)] = "h2c"
 	}
 
 	return dict, nil

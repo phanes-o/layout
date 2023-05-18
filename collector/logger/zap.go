@@ -2,9 +2,12 @@ package logger
 
 import (
 	"context"
+	"io"
+	"time"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"io"
+	"phanes/config"
 )
 
 type zopLog struct {
@@ -23,7 +26,7 @@ func ZapLog(level zapcore.Level, out ...io.Writer) Logger {
 		StacktraceKey:  "stacktrace",
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTime:     CustomTimeEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.FullCallerEncoder,
 		EncodeName:     zapcore.FullNameEncoder,
@@ -36,6 +39,9 @@ func ZapLog(level zapcore.Level, out ...io.Writer) Logger {
 		writer: out,
 	}
 	return l
+}
+func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format(config.Conf.Collect.Log.Prefix + " 2006/01/02 - 15:04:05.000"))
 }
 
 func (z *zopLog) WithContext(ctx context.Context) Logger {

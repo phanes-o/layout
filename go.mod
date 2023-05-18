@@ -6,10 +6,13 @@ require (
 	github.com/asim/go-micro/plugins/broker/nats/v4 v4.0.0-20220624181847-9960cd1d36c8
 	github.com/asim/go-micro/plugins/broker/rabbitmq/v4 v4.0.0-20220624181847-9960cd1d36c8
 	github.com/asim/go-micro/plugins/client/grpc/v4 v4.0.0-20220325022819-73eda3346d18
+	github.com/asim/go-micro/plugins/config/encoder/toml/v4 v4.7.0
+	github.com/asim/go-micro/plugins/config/encoder/yaml/v4 v4.7.0
 	github.com/asim/go-micro/plugins/config/source/etcd/v4 v4.0.0-20220622010113-107bd74187e7
 	github.com/asim/go-micro/plugins/registry/etcd/v4 v4.0.0-20220622010113-107bd74187e7
 	github.com/asim/go-micro/plugins/server/grpc/v4 v4.0.0-20211023082042-af3cfa0a4cac
 	github.com/asim/go-micro/plugins/server/http/v4 v4.0.0-20220622010113-107bd74187e7
+	github.com/asim/go-micro/plugins/transport/http/v4 v4.7.0
 	github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/locales v0.14.0
@@ -34,6 +37,7 @@ require (
 )
 
 require (
+	github.com/BurntSushi/toml v0.3.1 // indirect
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
@@ -45,6 +49,7 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-git/gcfg v1.5.0 // indirect
 	github.com/go-git/go-billy/v5 v5.3.1 // indirect

@@ -15,7 +15,6 @@ func Init() func() {
 	for _, init := range inits {
 		cancels = append(cancels, init())
 	}
-	
 	return func() {
 		for _, cancel := range cancels {
 			cancel()

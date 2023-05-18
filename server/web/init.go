@@ -2,23 +2,25 @@ package web
 
 import (
 	"fmt"
+
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/server/http/v4"
 	"phanes/model"
 	"phanes/server/web/middleware"
 	"phanes/server/web/v1"
 
+	"net"
+	"strings"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/util/addr"
-	"net"
 	"phanes/config"
 	"phanes/lib/traefik"
 	"phanes/utils"
-	"strings"
-	"time"
 )
 
 var (
@@ -29,15 +31,15 @@ var (
 )
 
 func Init() micro.Option {
-	webName = config.Conf.Name + "-http"
+	webName = config.Conf.Base.Name + "-http"
 
-	if config.Conf.HttpListen != "" {
-		defaultListenAddr = config.Conf.HttpListen
+	if config.Conf.Base.HttpListen != "" {
+		defaultListenAddr = config.Conf.Base.HttpListen
 	}
 
 	srv = http.NewServer(
 		server.Name(webName),
-		server.Version(config.Conf.Version),
+		server.Version(config.Conf.Base.Version),
 		server.Address(defaultListenAddr),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
@@ -88,7 +90,7 @@ func Register() error {
 		Prefix:    config.Conf.Traefik.Prefix,
 		EndPoints: []string{"http"},
 	}
-	if strings.ToLower(config.Conf.Env) == model.EnvProd {
+	if strings.ToLower(config.Conf.Base.Env) == model.EnvProd {
 		conf.EndPoints = []string{"https"}
 	}
 	return traefik.Register(conf)

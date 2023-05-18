@@ -1,0 +1,46 @@
+name = "phanes"
+env = "dev"
+http_listen = ":7771"
+version = "0.1.0"
+
+[[db]]
+addr = "host=127.0.0.1 user=root password=root dbname=phanes port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+pwd = "root"
+type = "postgres"
+user = "root"
+
+[[db]]
+addr = "127.0.0.1:6379"
+pwd = ""
+type = "redis"
+user = ""
+
+[broker]
+addr = "amqp://coco:kk123123123@127.0.0.1:5672/"
+pwd = ""
+type = "rabbitmq"
+user = ""
+
+[collect.log]
+file_name = "admin"
+prefix = "【Phanes】"
+
+[collect.log.redis]
+addr = ""
+pwd = ""
+redis_key = "log_list"
+
+[collect.metric]
+addr = ""
+
+[collect.trace]
+addr = ""
+
+[proxy]
+domain = "http://127.0.0.1"
+prefix = "/phanes"
+
+[traefik]
+domain = "test.com"
+enabled = false
+prefix = "/phanes"

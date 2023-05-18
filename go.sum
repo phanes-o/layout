@@ -84,6 +84,10 @@ github.com/asim/go-micro/plugins/broker/rabbitmq/v4 v4.0.0-20220624181847-9960cd
 github.com/asim/go-micro/plugins/client/grpc/v4 v4.0.0-20211019191242-9edc569e68bb/go.mod h1:UgGMsB3H99fpbJA9KtNIfrDsUwXibRoebz7/5yhbH3M=
 github.com/asim/go-micro/plugins/client/grpc/v4 v4.0.0-20220325022819-73eda3346d18 h1:/c9Ilc/feZtIZxvHBHeMAMeXC+x9i4J7LWa/yDkvPLU=
 github.com/asim/go-micro/plugins/client/grpc/v4 v4.0.0-20220325022819-73eda3346d18/go.mod h1:P/Jjf1gCQqBAgpVerr3opyTU594ns1t0JZXsDAYh86c=
+github.com/asim/go-micro/plugins/config/encoder/toml/v4 v4.7.0 h1:Ff2bB7xnOTvTsu6g3F/YJSBbA6a/AsdMj9od8jkdkIU=
+github.com/asim/go-micro/plugins/config/encoder/toml/v4 v4.7.0/go.mod h1:x7YIgC4Do+BCihPbENDqjTsUfm3OkOB1GEgrpck2iJ4=
+github.com/asim/go-micro/plugins/config/encoder/yaml/v4 v4.7.0 h1:VR5anAC4asZYKEpBssOGv7hO8m+1j2ZL5PGYJVdH9qs=
+github.com/asim/go-micro/plugins/config/encoder/yaml/v4 v4.7.0/go.mod h1:tRcpGjk28FtJQyp4DtmCMdEIyr/wDkCmtVQtv8dx4t0=
 github.com/asim/go-micro/plugins/config/source/etcd/v4 v4.0.0-20220622010113-107bd74187e7 h1:n7YdCECFUu5F55wNn29yRIN8XEo/kx3JdIx94PyxaU4=
 github.com/asim/go-micro/plugins/config/source/etcd/v4 v4.0.0-20220622010113-107bd74187e7/go.mod h1:VcUosY7r38HFQRERex3eLtKfKWApTOUshoDJqxV5SZk=
 github.com/asim/go-micro/plugins/registry/etcd/v4 v4.0.0-20220622010113-107bd74187e7 h1:TZCa9jcEp4wusNI9BeYuZm4EfMPzjXJfetdBsxCAvFA=
@@ -95,6 +99,8 @@ github.com/asim/go-micro/plugins/server/http/v4 v4.0.0-20220622010113-107bd74187
 github.com/asim/go-micro/plugins/server/http/v4 v4.0.0-20220622010113-107bd74187e7/go.mod h1:LEsuhy4ZF3UGT9VSOoj/ZP0MZt4brlgwJVG7/LAac+I=
 github.com/asim/go-micro/plugins/transport/grpc/v4 v4.0.0-20211019191242-9edc569e68bb h1:rCIGzR4YRddwaWM4pZkbxHIkhFbbuGZOqivnxyKNQz8=
 github.com/asim/go-micro/plugins/transport/grpc/v4 v4.0.0-20211019191242-9edc569e68bb/go.mod h1:dzSEAsAqQ4mRaYPJ07KcAt6rIjYUJ9w55UXvnyGx4VE=
+github.com/asim/go-micro/plugins/transport/http/v4 v4.7.0 h1:aAyoa8uxv10BdfMVyOYCjd1FcxAMetQWvzDmtYHJmdA=
+github.com/asim/go-micro/plugins/transport/http/v4 v4.7.0/go.mod h1:KqQcXBxxf+G8oZwE33mNt82eWScRC0eQ2YVqVifXaXs=
 github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8 h1:TcG2Boq7asB463UducqiY9Cs7L2Ad6tgsvt9xNbQ6JQ=
 github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8/go.mod h1:t6EsmMDBjf1reNvaf5nRfT4Ba33DfzI9ddhB4AMKE9s=
 github.com/aws/aws-sdk-go v1.37.27/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
@@ -204,6 +210,7 @@ github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/fsouza/go-dockerclient v1.7.3/go.mod h1:8xfZB8o9SptLNJ13VoV5pMiRbZGWkU/Omu5VOu/KC9Y=
 github.com/getkin/kin-openapi v0.13.0/go.mod h1:WGRs2ZMM1Q8LR1QBEwUxC6RJEfaBcD0s+pcEVXFuAjw=
+github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=

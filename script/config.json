@@ -6,6 +6,7 @@
 
   "collect": {
     "log": {
+      "prefix": "【Phanes】",
       "file_name": "admin",
       "redis": {
         "redis_key": "log_list",
