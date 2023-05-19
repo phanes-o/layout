@@ -16,12 +16,15 @@ const (
 type Config struct {
 	TTL time.Duration
 
-	Type      ReverseType
-	SrvName   string
-	SrvAddr   string
-	Rule      string
-	Prefix    string
-	EndPoints []string
+	EnableRouter bool
+	Tls          bool
+	Enable       bool
+	Type         ReverseType
+	SrvName      string
+	SrvAddr      string
+	Rule         string
+	Prefix       string
+	EndPoints    []string
 }
 
 func Init(addr string) error {

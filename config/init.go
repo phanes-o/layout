@@ -16,6 +16,7 @@ import (
 	"go-micro.dev/v4/config/reader"
 	"go-micro.dev/v4/config/reader/json"
 	"go-micro.dev/v4/config/source"
+	"go-micro.dev/v4/config/source/file"
 	"phanes/lib/traefik"
 	"phanes/model"
 	"phanes/utils"
@@ -27,7 +28,8 @@ func Init() func() {
 		err            error
 		conf           config.Config
 		cancels        = make([]func(), 0)
-		configFileType = "yaml"
+		iSource        source.Source
+		configFileType = model.ConfigFileTypeYaml
 	)
 
 	switch configFileType {
@@ -41,16 +43,21 @@ func Init() func() {
 
 	Conf = &Config{}
 	utils.Throw(extractEtcdAddr())
-	etcdSource := etcd.NewSource(
-		etcd.WithAddress(EtcdAddr),
-		etcd.WithPrefix(prefix),
-		source.WithEncoder(e),
-		etcd.StripPrefix(true),
-		etcd.WithDialTimeout(time.Second*time.Duration(10)),
-	)
+
+	if configFile != "" {
+		iSource = file.NewSource(file.WithPath(configFile))
+	} else {
+		iSource = etcd.NewSource(
+			etcd.WithAddress(EtcdAddr),
+			etcd.WithPrefix(prefix),
+			source.WithEncoder(e),
+			etcd.StripPrefix(true),
+			etcd.WithDialTimeout(time.Second*time.Duration(10)),
+		)
+	}
 	// Create new config
 	conf, err = config.NewConfig(
-		config.WithSource(etcdSource),
+		config.WithSource(iSource),
 		config.WithReader(json.NewReader(reader.WithEncoder(e))),
 	)
 	utils.Throw(err)
@@ -95,6 +102,7 @@ func extractEtcdAddr() error {
 	app.Flags = cmd.DefaultCmd.App().Flags
 	app.Action = func(ctx *cli.Context) error {
 		EtcdAddr = ctx.String("registry_address")
+		configFile = ctx.String("config")
 		return nil
 	}
 

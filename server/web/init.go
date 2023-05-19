@@ -1,25 +1,18 @@
 package web
 
 import (
-	"fmt"
-
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/server/http/v4"
-	"phanes/model"
 	"phanes/server/web/middleware"
 	"phanes/server/web/v1"
 
-	"net"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
-	"go-micro.dev/v4/util/addr"
 	"phanes/config"
-	"phanes/lib/traefik"
 	"phanes/utils"
 )
 
@@ -58,40 +51,7 @@ func Init() micro.Option {
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
 	utils.Throw(srv.Start())
 	if config.Conf.Traefik.Enabled {
-		utils.Throw(Register())
+		utils.Throw(utils.Register(webName, srv))
 	}
 	return micro.Server(srv)
-}
-
-func extractWebAddr(srv server.Server) error {
-	host, port, err := net.SplitHostPort(srv.Options().Address)
-	if err != nil {
-		return err
-	}
-	extractAddr, err := addr.Extract(host)
-	if err != nil {
-		return err
-	}
-	if strings.Count(extractAddr, ":") > 0 {
-		extractAddr = "[" + extractAddr + "]"
-	}
-
-	webAddr = fmt.Sprintf("%v:%v", extractAddr, port)
-	return nil
-}
-
-func Register() error {
-	utils.Throw(extractWebAddr(srv))
-
-	conf := &traefik.Config{
-		SrvName:   webName,
-		SrvAddr:   webAddr,
-		Rule:      fmt.Sprintf("Host(`%s`) || PathPrefix(`%s`)", config.Conf.Traefik.Domain, config.Conf.Traefik.Prefix),
-		Prefix:    config.Conf.Traefik.Prefix,
-		EndPoints: []string{"http"},
-	}
-	if strings.ToLower(config.Conf.Base.Env) == model.EnvProd {
-		conf.EndPoints = []string{"https"}
-	}
-	return traefik.Register(conf)
 }
