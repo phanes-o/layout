@@ -51,7 +51,7 @@ func Init() micro.Option {
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
 	utils.Throw(srv.Start())
 	if config.Conf.Traefik.Enabled {
-		utils.Throw(utils.Register(webName, srv))
+		utils.Throw(config.Register(webName, srv))
 	}
 	return micro.Server(srv)
 }

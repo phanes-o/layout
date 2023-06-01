@@ -5,11 +5,11 @@ base:
   version: 0.1.0
 
 db:
-  - addr: host=127.0.0.1 user=root password=root dbname=phanes port=5432
-      sslmode=disable TimeZone=Asia/Shanghai
-    pwd: root
-    type: postgres
-    user: root
+#  - addr: host=127.0.0.1 user=root password=root dbname=phanes port=5432
+#      sslmode=disable TimeZone=Asia/Shanghai
+#    pwd: root
+#    type: postgres
+#    user: root
   - addr: 127.0.0.1:6379
     pwd: ""
     type: redis
@@ -36,15 +36,13 @@ collect:
 traefik:
   enable_router: false
   # reverse proxy type support: tcp udp http grpc(h2c)
-  type:
-    - http
-    - tcp
+  type: tcp
   # support "||" or "&&"
   rule: "&&"
   # is enable tls
   tls: true
   domain: test.com
   # is enable traefik reverse proxy
-  enabled: false
+  enabled: true
   # match prefix
-  prefix: /phanes
+  prefix:

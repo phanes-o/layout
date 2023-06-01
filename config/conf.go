@@ -57,13 +57,12 @@ type Config struct {
 	} `json:"broker" yaml:"broker" toml:"broker"`
 
 	Traefik struct {
-		EnableRouter bool     `json:"enable_router" yaml:"enable_router" toml:"enable_router"`
-		Type         []string `json:"type" yaml:"type", toml:"type"`
-		// router rule  value: "||", "&&"
-		Rule    string `json:"rule" yaml:"rule" yaml:"toml"`
-		TLS     bool   `json:"tls" yaml:"tls" yaml:"tls"`
-		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
-		Domain  string `json:"domain" yaml:"domain" toml:"domain"`
-		Prefix  string `json:"prefix" yaml:"prefix" toml:"prefix"`
+		EnableRouter bool   `json:"enable_router" yaml:"enable_router" toml:"enable_router"`
+		Type         string `json:"type" yaml:"type" toml:"type"`
+		Rule         string `json:"rule" yaml:"rule" yaml:"toml"` // router rule  value: "||", "&&"
+		TLS          bool   `json:"tls" yaml:"tls" yaml:"tls"`
+		Enabled      bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+		Domain       string `json:"domain" yaml:"domain" toml:"domain"`
+		Prefix       string `json:"prefix" yaml:"prefix" toml:"prefix"`
 	} `json:"traefik" yaml:"traefik" toml:"traefik"`
 }

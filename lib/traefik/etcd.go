@@ -66,7 +66,7 @@ func (r *etcdRegistry) init(addrs ...string) error {
 func (r *etcdRegistry) loop() {
 	for {
 		for _, srv := range r.srvs {
-			if _, err := r.cli.KeepAlive(context.Background(), srv.LeaseID); err != nil {
+			if _, err := r.cli.KeepAliveOnce(context.Background(), srv.LeaseID); err != nil {
 				if err == rpctypes.ErrLeaseNotFound {
 					if srv.LeaseID, err = r.registerCore(srv.Config); err != nil {
 						fmt.Println("(/traefik) etcd registerCore errors: ", err)
@@ -157,21 +157,20 @@ func (r *etcdRegistry) build(conf *Config) (map[string]string, error) {
 		fmt.Sprintf("/traefik/%s/routers/%v/rule", t, conf.SrvName):    conf.Rule,
 		fmt.Sprintf("/traefik/%s/routers/%v/service", t, conf.SrvName): srv,
 	}
+
 	if conf.Enable {
 		dict["/traefik/enable"] = "true"
 	}
 
-	if conf.EnableRouter {
-		for i, ep := range conf.EndPoints {
-			switch conf.Type {
-			case ReverseTypeUdp:
-				fmt.Println(t, conf.SrvName, i, ep)
-				dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
-			case ReverseTypeTcp:
-				dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
-			case ReverseTypeHttp, ReverseTypeH2c:
-				dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
-			}
+	for i, ep := range conf.EndPoints {
+		switch conf.Type {
+		case ReverseTypeUdp:
+			fmt.Println(t, conf.SrvName, i, ep)
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
+		case ReverseTypeTcp:
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
+		case ReverseTypeHttp, ReverseTypeH2c:
+			dict[fmt.Sprintf("/traefik/%s/routers/%v/entrypoints/%v", t, conf.SrvName, i)] = ep
 		}
 	}
 
