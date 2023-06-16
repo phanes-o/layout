@@ -2,6 +2,7 @@ package collector
 
 import (
 	"phanes/collector/logger"
+	"phanes/collector/metrics"
 	"phanes/collector/trace"
 )
 
@@ -12,6 +13,7 @@ func Init() func() {
 		inits = []func() func(){
 			trace.Init,
 			logger.Init,
+			metrics.Init,
 		}
 	)
 

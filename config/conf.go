@@ -35,10 +35,12 @@ type Config struct {
 			} `json:"redis" yaml:"redis" toml:"redis"`
 		} `json:"log" yaml:"log" toml:"log"`
 		Trace struct {
-			Addr string `json:"addr" yaml:"addr" toml:"addr"`
+			Protocol string `json:"protocol" yaml:"protocol" toml:"protocol"` // "http" or "grpc"
+			Type     string `json: "type" yaml:"type" toml:"type"`            // "otel" or "jaeger" or "zipkin"
+			Addr     string `json:"addr" yaml:"addr" toml:"addr"`
 		} `json:"trace" yaml:"trace" toml:"trace"`
 		Metric struct {
-			Addr string `json:"addr" yaml:"addr" toml:"addr"`
+			Listen string `json:"listen" yaml:"listen" toml:"listen"` // prometheus fatch addr
 		} `json:"metric" yaml:"metric" toml:"metric"`
 	} `json:"collect" yaml:"collect" toml:"collect"`
 
