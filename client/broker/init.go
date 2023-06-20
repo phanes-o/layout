@@ -18,7 +18,7 @@ func Init() func() {
 
 	return func() {
 		if err := PubSub.Disconnect(); err != nil {
-			log.Error(err)
+			log.Error(err.Error())
 		}
 	}
 }

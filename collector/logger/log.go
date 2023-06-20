@@ -1,6 +1,10 @@
 package logger
 
-import "context"
+import (
+	"context"
+
+	"go.uber.org/zap/zapcore"
+)
 
 var defaultLogger Logger
 
@@ -8,78 +12,69 @@ func InitLogger(l Logger) {
 	defaultLogger = l
 }
 
-type Fields map[string]interface{}
-
 type Logger interface {
-	WithField(key string, value interface{}) Logger
-	WithFields(fields Fields) Logger
-	WithContext(ctx context.Context) Logger
-	Trace(args ...interface{})
-	Tracef(format string, args ...interface{})
-	Debug(args ...interface{})
-	Debugf(format string, args ...interface{})
-	Info(args ...interface{})
-	Infof(format string, args ...interface{})
-	Warn(args ...interface{})
-	Warnf(format string, args ...interface{})
-	Error(args ...interface{})
-	Errorf(format string, args ...interface{})
-	Panic(args ...interface{})
-	Panicf(format string, args ...interface{})
-	Fatal(args ...interface{})
-	Fatalf(format string, args ...interface{})
+	WithFields(fields ...zapcore.Field) Logger
+	Ctx(ctx context.Context) Logger
+	Debug(msg string, fields ...zapcore.Field)
+	DebugCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+	Info(msg string, fields ...zapcore.Field)
+	InfoCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+	Warn(msg string, fields ...zapcore.Field)
+	WarnCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+	Error(msg string, fields ...zapcore.Field)
+	ErrorCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+	Fatal(msg string, fields ...zapcore.Field)
+	FatalCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+	PanicCtx(ctx context.Context, msg string, fields ...zapcore.Field)
 }
 
 func WithContext(ctx context.Context) Logger {
-	return defaultLogger.WithContext(ctx)
-}
-func WithField(key string, value interface{}) Logger {
-	return defaultLogger.WithField(key, value)
+	return defaultLogger.Ctx(ctx)
 }
 
-func WithFields(fields Fields) Logger {
-	return defaultLogger.WithFields(fields)
+func WithFields(fields ...zapcore.Field) Logger {
+	return defaultLogger.WithFields(fields...)
 }
 
-func Trace(args ...interface{}) {
-	defaultLogger.Trace(args)
+func Debug(msg string, fields ...zapcore.Field) {
+	defaultLogger.Debug(msg, fields...)
 }
-func Tracef(format string, args ...interface{}) {
-	defaultLogger.Tracef(format, args)
+
+func DebugCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.DebugCtx(ctx, msg, fields...)
 }
-func Debug(args ...interface{}) {
-	defaultLogger.Debug(args)
+
+func Info(msg string, fields ...zapcore.Field) {
+	defaultLogger.Info(msg, fields...)
 }
-func Debugf(format string, args ...interface{}) {
-	defaultLogger.Debugf(format, args)
+
+func InfoCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.InfoCtx(ctx, msg, fields...)
 }
-func Info(args ...interface{}) {
-	defaultLogger.Info(args)
+
+func Warn(msg string, fields ...zapcore.Field) {
+	defaultLogger.Warn(msg, fields...)
 }
-func Infof(format string, args ...interface{}) {
-	defaultLogger.Infof(format, args)
+
+func WarnCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.WarnCtx(ctx, msg, fields...)
 }
-func Warn(args ...interface{}) {
-	defaultLogger.Warn(args)
+
+func Error(msg string, fields ...zapcore.Field) {
+	defaultLogger.Error(msg, fields...)
 }
-func Warnf(format string, args ...interface{}) {
-	defaultLogger.Warnf(format, args)
+func ErrorCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.ErrorCtx(ctx, msg, fields...)
 }
-func Error(args ...interface{}) {
-	defaultLogger.Error(args)
+
+func Fatal(msg string, fields ...zapcore.Field) {
+	defaultLogger.Fatal(msg, fields...)
 }
-func Errorf(format string, args ...interface{}) {
-	defaultLogger.Errorf(format, args)
+
+func FatalCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.FatalCtx(ctx, msg, fields...)
 }
-func Panic(args ...interface{}) {
-	defaultLogger.Panic(args)
-}
-func Panicf(format string, args ...interface{}) {
-	defaultLogger.Panicf(format, args)
-}
-func Fatal(args ...interface{}) {
-	defaultLogger.Fatal(args)
-}
-func Fatalf(format string, args ...interface{}) {
-	defaultLogger.Fatalf(format, args)
+
+func PanicCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	defaultLogger.PanicCtx(ctx, msg, fields...)
 }

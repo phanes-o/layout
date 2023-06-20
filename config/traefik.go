@@ -35,15 +35,14 @@ func Register(name string, srv server.Server) error {
 	}
 
 	conf := &traefik.Config{
-		Type:         reverseType,
-		Tls:          Conf.Traefik.TLS,
-		Enable:       Conf.Traefik.Enabled,
-		SrvName:      name,
-		SrvAddr:      serverAddr,
-		Rule:         fmt.Sprintf("%s(`%s`) %s PathPrefix(`%s`)", rulePrefix, Conf.Traefik.Domain, Conf.Traefik.Rule, Conf.Traefik.Prefix),
-		Prefix:       Conf.Traefik.Prefix,
-		EndPoints:    []string{Conf.Traefik.Type},
-		EnableRouter: Conf.Traefik.EnableRouter,
+		Type:      reverseType,
+		Tls:       Conf.Traefik.TLS,
+		Enable:    Conf.Traefik.Enabled,
+		SrvName:   name,
+		SrvAddr:   serverAddr,
+		Rule:      fmt.Sprintf("%s(`%s`) %s PathPrefix(`%s`)", rulePrefix, Conf.Traefik.Domain, Conf.Traefik.Rule, Conf.Traefik.Prefix),
+		Prefix:    Conf.Traefik.Prefix,
+		EndPoints: []string{Conf.Traefik.Type},
 	}
 
 	if Conf.Traefik.Type == "tcp" || Conf.Traefik.Type == "udp" {

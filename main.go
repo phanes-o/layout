@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	sig "go-micro.dev/v4/util/signal"
 	"phanes/bll"
 	"phanes/client"
 	"phanes/collector"
@@ -34,7 +35,8 @@ func main() {
 
 	go func() {
 		sigint := make(chan os.Signal, 1)
-		signal.Notify(sigint, os.Interrupt, os.Kill)
+
+		signal.Notify(sigint, sig.Shutdown()...)
 		<-sigint
 
 		for _, cancel := range cancels {

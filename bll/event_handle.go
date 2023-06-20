@@ -1,7 +1,6 @@
 package bll
 
 import (
-	log "phanes/collector/logger"
 	"phanes/event"
 )
 
@@ -17,5 +16,4 @@ func (e *eventHandle) init() func() {
 
 func (e *eventHandle) ExampleEventHandler(data interface{}) {
 	// handle event
-	log.Info("received event data: ", data)
 }

@@ -16,8 +16,8 @@ import (
 
 func Init() micro.Option {
 	srv := grpc.NewServer(
-		server.Name(config.Conf.Base.Name+"-grpc"),
-		server.Version(config.Conf.Base.Version),
+		server.Name(config.Conf.Name+"-grpc"),
+		server.Version(config.Conf.Version),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
 		server.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),

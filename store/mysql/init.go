@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	log "phanes/collector/logger"
@@ -16,10 +17,10 @@ func Init(connectAddr string) func() {
 	)
 
 	if db, err = gorm.Open(mysql.Open(connectAddr), &gorm.Config{}); err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	if sqlDB, err = db.DB(); err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
 	}
 	sqlDB.SetMaxIdleConns(50)
 	sqlDB.SetMaxOpenConns(500)
@@ -30,7 +31,7 @@ func Init(connectAddr string) func() {
 
 	return func() {
 		if err = sqlDB.Close(); err != nil {
-			log.Error(err)
+			log.Error(err.Error())
 		}
 	}
 }

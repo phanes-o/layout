@@ -1,10 +1,16 @@
 package errors
 
+// common Error type
 const (
 	None Type = 0
 
-	BadRequest Type = 4000 + iota
-	Unauthorized
+	Unauthorized Type = 1000
+
+	ErrParamsParse Type = iota + 1000
+)
+
+const (
+	BadRequest Type = iota + 2000
 	Forbidden
 	NotFound
 	InternalServerError
@@ -31,6 +37,6 @@ func (t Type) String() string {
 	case ServiceUnavailable:
 		return "service unavailable"
 	default:
-		return "unknown"
+		return ""
 	}
 }

@@ -24,7 +24,7 @@ func (a *user) register(c *gin.Context) {
 	var u = &dto.CreateUserRequest{}
 
 	if err := c.ShouldBindJSON(&u); err != nil {
-		c.Error(err)
+		c.Error(errors.ErrParamsParse.Warp(err, "register unmarshal json error"))
 		return
 	}
 

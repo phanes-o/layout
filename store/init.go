@@ -1,6 +1,7 @@
 package store
 
 import (
+	"go.uber.org/zap"
 	log "phanes/collector/logger"
 	"phanes/config"
 	"phanes/store/mysql"
@@ -21,7 +22,7 @@ func Init() func() {
 			case "redis":
 				cancels = append(cancels, redis.Init(db.Addr, db.Pwd))
 			default:
-				log.Error("unknown db type: ", db.Type)
+				log.Error("unknown db type: ", zap.String("db_type", db.Type))
 			}
 		}
 	}

@@ -1,6 +1,12 @@
 package postgres
 
 import (
+	"context"
+
+	"go.opentelemetry.io/otel"
+	"go.uber.org/zap"
+	log "phanes/collector/logger"
+	"phanes/errors"
 	"phanes/model/entity"
 )
 
@@ -10,8 +16,19 @@ func NewUser() *user {
 	return &user{}
 }
 
-func (a *user) Create(u *entity.User) (id int64, err error) {
-	err = db.Model(&entity.User{}).Create(u).Error
+func (a *user) Create(ctx context.Context, u *entity.User) (id int64, err error) {
+	p := otel.GetTracerProvider()
+	tracer := p.Tracer("store")
+	ctx, span := tracer.Start(ctx, "Store.User.Create")
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+		}
+		span.End()
+	}()
+	//err = db.Model(&entity.User{}).Create(u).Error
+	err = errors.New("test")
+	log.ErrorCtx(ctx, "[store] create user error", zap.String("err_info", err.Error()))
 	return u.ID, err
 }
 

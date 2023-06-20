@@ -23,8 +23,10 @@ func Init() func() {
 	writers = append(writers, os.Stderr)
 
 	// set your log level here
-	logger := ZapLog(zapcore.Level(l.LogLevel), writers...)
+	logger := NewZapLog(zapcore.Level(l.LogLevel), writers...)
 	InitLogger(logger)
 
-	return func() {}
+	return func() {
+		logger.logger.Sync()
+	}
 }

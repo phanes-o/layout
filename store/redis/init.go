@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+
 	"github.com/go-redis/redis/v8"
 	log "phanes/collector/logger"
 )
@@ -24,7 +25,7 @@ func Init(connectAddr, pwd string) func() {
 
 	return func() {
 		if err := client.Close(); err != nil {
-			log.Error(err)
+			log.Error(err.Error())
 		}
 	}
 }

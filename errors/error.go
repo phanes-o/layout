@@ -8,42 +8,47 @@ import (
 
 type Type int
 
-type customError struct {
+type CustomError struct {
 	errType       Type
 	originalError error
 }
 
-func (c customError) Error() string {
-	return c.originalError.Error()
+func (c CustomError) Error() string {
+	res := c.originalError.Error()
+	if c.errType.String() != "" {
+		res = c.errType.String() + ": " + res
+	}
+	return res
 }
 
 func (t Type) New(msg string) error {
-	return customError{
+	e := CustomError{
 		errType:       t,
 		originalError: errors.New(msg),
 	}
+	return e
 }
 
 func (t Type) Warp(err error, msg string) error {
-	return customError{
+	return CustomError{
 		errType:       t,
 		originalError: errors.Wrap(err, msg),
 	}
 }
 
 func (t Type) Warpf(err error, msg string, args ...interface{}) error {
-	return customError{
+	return CustomError{
 		errType:       t,
 		originalError: errors.Wrapf(err, msg, args...),
 	}
 }
 
 func New(msg string) error {
-	return customError{errType: None, originalError: errors.New(msg)}
+	return CustomError{errType: None, originalError: errors.New(msg)}
 }
 
 func Newf(msg string, args ...interface{}) error {
-	return customError{errType: None, originalError: errors.New(fmt.Sprintf(msg, args...))}
+	return CustomError{errType: None, originalError: errors.New(fmt.Sprintf(msg, args...))}
 }
 
 func Wrap(err error, msg string) error {
@@ -60,18 +65,18 @@ func Cause(err error) error {
 
 func Wrapf(err error, msg string, args ...interface{}) error {
 	wrappedError := errors.Wrapf(err, msg, args...)
-	if customErr, ok := err.(customError); ok {
-		return customError{
+	if customErr, ok := err.(CustomError); ok {
+		return CustomError{
 			errType:       customErr.errType,
 			originalError: wrappedError,
 		}
 	}
 
-	return customError{errType: None, originalError: wrappedError}
+	return CustomError{errType: None, originalError: wrappedError}
 }
 
 func GetType(err error) Type {
-	if customErr, ok := err.(customError); ok {
+	if customErr, ok := err.(CustomError); ok {
 		return customErr.errType
 	}
 	return None

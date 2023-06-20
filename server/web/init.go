@@ -24,15 +24,15 @@ var (
 )
 
 func Init() micro.Option {
-	webName = config.Conf.Base.Name + "-http"
+	webName = config.Conf.Name + "-http"
 
-	if config.Conf.Base.HttpListen != "" {
-		defaultListenAddr = config.Conf.Base.HttpListen
+	if config.Conf.HttpListen != "" {
+		defaultListenAddr = config.Conf.HttpListen
 	}
 
 	srv = http.NewServer(
 		server.Name(webName),
-		server.Version(config.Conf.Base.Version),
+		server.Version(config.Conf.Version),
 		server.Address(defaultListenAddr),
 		server.RegisterTTL(time.Second*30),
 		server.RegisterInterval(time.Second*15),
@@ -45,7 +45,7 @@ func Init() micro.Option {
 	router.Use(gin.Recovery())
 
 	// register routers
-	v1Group := router.Group("v1", middleware.Log())
+	v1Group := router.Group("v1", middleware.LogAndTrace(), middleware.BaseMetric())
 	v1.Init(v1Group)
 
 	utils.Throw(srv.Handle(srv.NewHandler(router)))

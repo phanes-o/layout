@@ -5,7 +5,9 @@ import (
 
 	"github.com/phanes-o/proto/base"
 	"github.com/phanes-o/proto/dto"
-	log "go-micro.dev/v4/logger"
+	"go.opentelemetry.io/otel"
+	"go.uber.org/zap"
+	log "phanes/collector/logger"
 	"phanes/errors"
 	"phanes/event"
 	"phanes/model/entity"
@@ -29,9 +31,20 @@ func (a *user) Create(ctx context.Context, in *dto.CreateUserRequest) (err error
 		Username: in.Username,
 		Password: in.Password,
 	}
-	_, err = a.user.Create(u)
+
+	p := otel.GetTracerProvider()
+	tracer := p.Tracer("bll")
+	ctx, span := tracer.Start(ctx, "Bll.User.Create")
+	defer func() {
+		if err != nil {
+			span.RecordError(err)
+		}
+		span.End()
+	}()
+
+	_, err = a.user.Create(ctx, u)
 	if err != nil {
-		log.Error(err)
+		log.ErrorCtx(ctx, "[bll] create user failed", zap.String("err_info", err.Error()))
 		return errors.Wrap(err, "user create failed")
 	}
 

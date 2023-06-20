@@ -16,34 +16,14 @@ var (
 )
 
 type Config struct {
-	Base struct {
-		Name       string `json:"name" yaml:"name" toml:"name"`
-		Env        string `json:"env" yaml:"env" toml:"env"`
-		Version    string `json:"version" yaml:"version" toml:"version"`
-		HttpListen string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
-	} `json:"base" yaml:"base" toml:"base"`
+	Name       string `json:"name" yaml:"name" toml:"name"`
+	Env        string `json:"env" yaml:"env" toml:"env"`
+	Version    string `json:"version" yaml:"version" toml:"version"`
+	HttpListen string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
 
-	Collect struct {
-		Log struct {
-			LogLevel uint8  `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
-			Prefix   string `json:"prefix" yaml:"prefix" toml:"prefix"`
-			FileName string `json:"file_name"  yaml:"file_name" toml:"file_name"`
-			Redis    struct {
-				RedisKey string `json:"redis_key" yaml:"redis_key" toml:"redis_key`
-				Addr     string `json:"addr" yaml:"addr" toml:"addr"`
-				Pwd      string `json:"pwd" yaml:"pwd" toml:"pwd"`
-			} `json:"redis" yaml:"redis" toml:"redis"`
-		} `json:"log" yaml:"log" toml:"log"`
-		Trace struct {
-			Protocol string `json:"protocol" yaml:"protocol" toml:"protocol"` // "http" or "grpc"
-			Type     string `json: "type" yaml:"type" toml:"type"`            // "otel" or "jaeger" or "zipkin"
-			Addr     string `json:"addr" yaml:"addr" toml:"addr"`
-		} `json:"trace" yaml:"trace" toml:"trace"`
-		Metric struct {
-			Listen string `json:"listen" yaml:"listen" toml:"listen"` // prometheus fatch addr
-		} `json:"metric" yaml:"metric" toml:"metric"`
-	} `json:"collect" yaml:"collect" toml:"collect"`
+	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
 
+	// todo: support read and write split db
 	DB []struct {
 		Addr string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
 		Type string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
@@ -59,12 +39,31 @@ type Config struct {
 	} `json:"broker" yaml:"broker" toml:"broker"`
 
 	Traefik struct {
-		EnableRouter bool   `json:"enable_router" yaml:"enable_router" toml:"enable_router"`
-		Type         string `json:"type" yaml:"type" toml:"type"`
-		Rule         string `json:"rule" yaml:"rule" yaml:"toml"` // router rule  value: "||", "&&"
-		TLS          bool   `json:"tls" yaml:"tls" yaml:"tls"`
-		Enabled      bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
-		Domain       string `json:"domain" yaml:"domain" toml:"domain"`
-		Prefix       string `json:"prefix" yaml:"prefix" toml:"prefix"`
+		Type    string `json:"type" yaml:"type" toml:"type"`          // support tcp,http,grpc,udp
+		Rule    string `json:"rule" yaml:"rule" yaml:"toml"`          // router rule  value: "||", "&&"
+		TLS     bool   `json:"tls" yaml:"tls" yaml:"tls"`             // is or not enable tls
+		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"` // is or not register traefik
+		Domain  string `json:"domain" yaml:"domain" toml:"domain"`    // gateway domain
+		Prefix  string `json:"prefix" yaml:"prefix" toml:"prefix"`    // if Prefix is not empty, it will register router and middleware
 	} `json:"traefik" yaml:"traefik" toml:"traefik"`
+}
+
+type Collect struct {
+	Log struct {
+		LogLevel   uint8  `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
+		Prefix     string `json:"prefix" yaml:"prefix" toml:"prefix"`
+		FileName   string `json:"file_name"  yaml:"file_name" toml:"file_name"`
+		BufferSize int    `json:"buffer_size", yaml:"buffer_size" toml:"buffer_size"`
+		Interval   int64  `json:"interval" yaml:"interval" toml:"interval"`
+	} `json:"log" yaml:"log" toml:"log"`
+
+	Trace struct {
+		Protocol string `json:"protocol" yaml:"protocol" toml:"protocol"` // trace report way "http" or "grpc"
+		Type     string `json: "type" yaml:"type" toml:"type"`            // trace report type "otel" or "jaeger" or "zipkin"
+		Addr     string `json:"addr" yaml:"addr" toml:"addr"`
+	} `json:"trace" yaml:"trace" toml:"trace"`
+
+	Metric struct {
+		Listen string `json:"listen" yaml:"listen" toml:"listen"` // prometheus fatch addr
+	} `json:"metric" yaml:"metric" toml:"metric"`
 }

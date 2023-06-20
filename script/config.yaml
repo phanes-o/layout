@@ -1,8 +1,7 @@
-base:
-  name: phanes
-  env: dev
-  http_listen: :7771
-  version: 0.1.0
+name: phanes
+env: dev
+http_listen: :7771
+version: 0.1.0
 
 db:
 #  - addr: host=127.0.0.1 user=root password=root dbname=phanes port=5432
@@ -24,17 +23,24 @@ broker:
 # otel config
 collect:
   log:
+    # DebugLevel = -1, InfoLevel = 0, WarnLevel = 1 ErrorLevel = 2, DPanicLevel = 3, PanicLevel = 4, FatalLevel = 5
+    level: -1
     # log file name
     file_name: admin
     # log print prefix
-    prefix: 【Phanes】
+    prefix: "[PHANES]"
+    # will buffer up to 4096 kilobytes of logs,
+    # waiting at most 10 seconds between flushes.
+    buffer_size: 4096 # kb, default 256kb
+    interval: 10 # second, default 30s
   metric:
-    addr: ""
+    # metrics will listen a http port
+    # example: localhost:2223/metrics
+    listen: ":2223"
   trace:
-    addr: ""
+    addr: "http://localhost:14268/api/traces"
 
 traefik:
-  enable_router: false
   # reverse proxy type support: tcp udp http grpc(h2c)
   type: tcp
   # support "||" or "&&"
@@ -45,4 +51,4 @@ traefik:
   # is enable traefik reverse proxy
   enabled: true
   # match prefix
-  prefix:
+  # prefix:
