@@ -5,23 +5,19 @@ import (
 	"sync"
 )
 
-// Handler 定义了事件处理函数的签名。
-type Handler func(payload interface{})
+type Handler func(e Event, payload interface{})
 
-// EventBus 是一个事件总线。
 type EventBus struct {
 	handlers map[Event][]Handler
 	mutex    sync.RWMutex
 }
 
-// NewEventBus 创建一个新的事件总线。
 func NewEventBus() *EventBus {
 	return &EventBus{
 		handlers: make(map[Event][]Handler),
 	}
 }
 
-// Register 在事件总线中注册一个事件处理函数。
 func (bus *EventBus) Register(event Event, handler Handler) {
 	bus.mutex.Lock()
 	defer bus.mutex.Unlock()
@@ -34,7 +30,6 @@ func (bus *EventBus) Register(event Event, handler Handler) {
 	bus.handlers[event] = append(handlers, handler)
 }
 
-// Unregister 在事件总线中取消注册一个事件处理函数。
 func (bus *EventBus) Unregister(event Event, handler Handler) {
 	bus.mutex.Lock()
 	defer bus.mutex.Unlock()
@@ -52,7 +47,6 @@ func (bus *EventBus) Unregister(event Event, handler Handler) {
 	}
 }
 
-// PublishAsync 发布一个异步事件。
 func (bus *EventBus) PublishAsync(event Event, payload interface{}) {
 	bus.mutex.RLock()
 	handlers, ok := bus.handlers[event]
@@ -63,11 +57,10 @@ func (bus *EventBus) PublishAsync(event Event, payload interface{}) {
 	}
 
 	for _, handler := range handlers {
-		go handler(payload)
+		go handler(event, payload)
 	}
 }
 
-// PublishSync 发布一个同步事件。
 func (bus *EventBus) PublishSync(event Event, payload interface{}) {
 	bus.mutex.RLock()
 	handlers, ok := bus.handlers[event]
@@ -78,6 +71,6 @@ func (bus *EventBus) PublishSync(event Event, payload interface{}) {
 	}
 
 	for _, handler := range handlers {
-		handler(payload)
+		handler(event, payload)
 	}
 }

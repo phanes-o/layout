@@ -94,11 +94,10 @@ func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
 		EncodeName:     zapcore.FullNameEncoder,
 	}
 
-	w := zapcore.AddSync(io.MultiWriter(out...))
 	conf := config.Conf.Collect.Log
 	core := zapcore.NewCore(
-		zapcore.NewConsoleEncoder(encoderConfig),
-		NewBufferedWriteSyncer(conf.BufferSize, time.Duration(conf.Interval)*time.Second, w),
+		zapcore.NewJSONEncoder(encoderConfig),
+		NewBufferedWriteSyncer(conf.BufferSize, time.Duration(conf.Interval)*time.Second, io.MultiWriter(out...)),
 		level,
 	)
 
