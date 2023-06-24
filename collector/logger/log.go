@@ -2,7 +2,6 @@ package logger
 
 import (
 	"context"
-
 	"go.uber.org/zap/zapcore"
 )
 

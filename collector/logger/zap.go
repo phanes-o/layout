@@ -3,6 +3,7 @@ package logger
 import (
 	"context"
 	"io"
+	"os"
 	"time"
 
 	"github.com/uptrace/opentelemetry-go-extra/otelzap"
@@ -95,10 +96,15 @@ func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
 	}
 
 	conf := config.Conf.Collect.Log
+
 	core := zapcore.NewCore(
 		zapcore.NewJSONEncoder(encoderConfig),
 		NewBufferedWriteSyncer(conf.BufferSize, time.Duration(conf.Interval)*time.Second, io.MultiWriter(out...)),
 		level,
+	)
+	core = zapcore.NewTee(
+		zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), os.Stdout, level),
+		core,
 	)
 
 	logger := otelzap.New(

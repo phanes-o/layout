@@ -1,9 +1,7 @@
-package middleware
+package translation
 
 import (
-	"reflect"
-	"strings"
-
+	"errors"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -11,14 +9,11 @@ import (
 	"github.com/go-playground/validator/v10"
 	enTranslations "github.com/go-playground/validator/v10/translations/en"
 	zhTranslations "github.com/go-playground/validator/v10/translations/zh"
+	"reflect"
+	"strings"
 )
-var trans ut.Translator
 
-func init() {
-	InitTrans("en")
-}
-
-func InitTrans(locale string) error {
+func InitTrans(locale string) (ut.Translator, error) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterTagNameFunc(func(fld reflect.StructField) string {
 			name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
@@ -34,9 +29,9 @@ func InitTrans(locale string) error {
 			return name
 		})
 		zhT := zh.New()
-		enT := en.New() 
+		enT := en.New()
 		uni := ut.New(enT, zhT, enT)
-		trans, _ = uni.GetTranslator(locale)
+		trans, _ := uni.GetTranslator(locale)
 
 		switch locale {
 		case "en":
@@ -47,25 +42,9 @@ func InitTrans(locale string) error {
 			_ = enTranslations.RegisterDefaultTranslations(v, trans)
 		}
 
+		return trans, nil
 	}
 
-	return nil
+	return nil, errors.New("init translation error")
 
-}
-
-func removeTopStruct(fields map[string]string) string {
-	res := map[string]string{}
-	for field, err := range fields {
-		res[field[strings.Index(field, ".")+1:]] = err
-	}
-	var str string
-	for _, v := range res {
-		if len(str) == 0 {
-			str += v
-		} else {
-			str += ", " + v
-		}
-	}
-
-	return str
 }

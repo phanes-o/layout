@@ -118,3 +118,21 @@ func Extract(ctx context.Context, md metadata.Metadata, opts ...Option) (baggage
 
 	return baggage.FromContext(ctx), trace.SpanContextFromContext(ctx)
 }
+
+func SpanIDFromContext(ctx context.Context) string {
+	spanCtx := trace.SpanContextFromContext(ctx)
+	if spanCtx.HasSpanID() {
+		return spanCtx.SpanID().String()
+	}
+
+	return ""
+}
+
+func TraceIDFromContext(ctx context.Context) string {
+	spanCtx := trace.SpanContextFromContext(ctx)
+	if spanCtx.HasTraceID() {
+		return spanCtx.TraceID().String()
+	}
+
+	return ""
+}
