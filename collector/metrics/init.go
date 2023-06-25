@@ -18,12 +18,18 @@ var defaultListenAddr = ":2223"
 var Meter metricApi.Meter
 
 func Init() func() {
+	var registries = make([]client.Collector, 0, 0)
+
+	for _, m := range metrics {
+		registries = append(registries, m.Init()...)
+	}
+
+	registries = append(registries, collectors.NewGoCollector())
+	registries = append(registries, collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}))
+
 	// Create non-global registry.
 	registry := client.NewRegistry()
-	registry.MustRegister(
-		collectors.NewGoCollector(),
-		collectors.NewProcessCollector(collectors.ProcessCollectorOpts{}),
-	)
+	registry.MustRegister(registries...)
 
 	reader, err := prometheus.New(prometheus.WithRegisterer(registry))
 	if err != nil {

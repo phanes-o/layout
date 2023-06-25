@@ -80,44 +80,30 @@ func (z *ZapLog) PanicCtx(ctx context.Context, msg string, fields ...zapcore.Fie
 }
 
 func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
-	encoderConfig := zapcore.EncoderConfig{
-		TimeKey:        "time",
-		LevelKey:       "level",
-		NameKey:        "logger",
-		CallerKey:      "caller",
-		MessageKey:     "msg",
-		StacktraceKey:  "stack",
-		LineEnding:     zapcore.DefaultLineEnding,
-		EncodeLevel:    zapcore.LowercaseLevelEncoder,
-		EncodeTime:     CustomTimeEncoder,
-		EncodeDuration: zapcore.SecondsDurationEncoder,
-		EncodeCaller:   zapcore.FullCallerEncoder,
-		EncodeName:     zapcore.FullNameEncoder,
-	}
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig.EncodeTime = CustomTimeEncoder
 
-	conf := config.Conf.Collect.Log
-
-	core := zapcore.NewCore(
-		zapcore.NewJSONEncoder(encoderConfig),
-		NewBufferedWriteSyncer(conf.BufferSize, time.Duration(conf.Interval)*time.Second, io.MultiWriter(out...)),
-		level,
-	)
-	core = zapcore.NewTee(
-		zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), os.Stdout, level),
-		core,
+	syncer := NewBufferedWriteSyncer(
+		config.Conf.Collect.Log.BufferSize,
+		time.Duration(config.Conf.Collect.Log.Interval)*time.Second,
+		io.MultiWriter(out...),
 	)
 
-	logger := otelzap.New(
+	outputCore := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), syncer, level)
+	consoleCore := zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), os.Stdout, level)
+	core := zapcore.NewTee(consoleCore, outputCore)
+
+	otelLogger := otelzap.New(
 		zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2)),
 		otelzap.WithCaller(true),
 		otelzap.WithTraceIDField(true),
 	)
 
-	l := &ZapLog{
-		logger: logger,
+	logger := &ZapLog{
+		logger: otelLogger,
 		writer: out,
 	}
-	return l
+	return logger
 }
 
 func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {

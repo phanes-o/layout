@@ -2,10 +2,14 @@ package middleware
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
+	"phanes/collector/metrics"
 	"phanes/utils"
 
 	log "phanes/collector/logger"
@@ -15,33 +19,38 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 )
 
-func LogAndTrace() gin.HandlerFunc {
+func OtelMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
 			err      error
+			ctx      context.Context
+			span     trace.Span
 			tracer   = otel.GetTracerProvider().Tracer("http-request")
-			spanName = fmt.Sprintf("%s-%s", c.Request.URL, c.Request.Method)
 			params   = GetRequestParams(c)
+			traceID  string
+			spanName = fmt.Sprintf("%s-%s", c.Request.URL, c.Request.Method)
 		)
-
-		ctx, span := tracer.Start(c.Request.Context(), spanName)
-		traceID := span.SpanContext().TraceID().String()
+		ctx, span = tracer.Start(c.Request.Context(), spanName)
+		traceID = span.SpanContext().TraceID().String()
+		traceLabel := prometheus.Labels{"TraceID": traceID}
 
 		span.SetAttributes(attribute.String("url", c.Request.URL.String()))
 		span.SetAttributes(attribute.String("remote_addr", c.Request.RemoteAddr))
 		span.SetAttributes(attribute.String("request_params", utils.ToJsonString(params)))
 		c.Request = c.Request.WithContext(ctx)
+		metrics.Http.RequestCountInc(traceLabel)
 
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
+				metrics.Http.RequestErrorInc(traceLabel)
 			}
-
 			span.End()
 		}()
 
 		newWriter := customWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
 		c.Writer = newWriter
+		start := time.Now()
 		c.Next()
 		err = HandleResponse(c)
 
@@ -66,7 +75,7 @@ func LogAndTrace() gin.HandlerFunc {
 		resp := newWriter.body.String()
 		span.SetAttributes(attribute.String("response_body", resp))
 		span.SetAttributes(attribute.String("response_status", fmt.Sprintf("%d", c.Writer.Status())))
-
+		metrics.Http.RequestTimeDurationRecord(time.Since(start).Seconds(), traceLabel)
 	}
 }
 

@@ -3,17 +3,20 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
+	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/zap"
-	"io/ioutil"
-	"net/http"
 	log "phanes/collector/logger"
+	"phanes/collector/metrics"
 	"phanes/errors"
 	"phanes/lib/trace"
 	"phanes/lib/translation"
-	"strings"
 )
 
 func GetRequestParams(c *gin.Context) map[string]interface{} {
@@ -68,6 +71,8 @@ func HandleResponse(c *gin.Context) error {
 						"code":     errType,
 						"message":  RemoveTopStruct(errs.Translate(translate)),
 					})
+					traceLabel := prometheus.Labels{"StatusCode": "400"}
+					metrics.Http.ResponseCodeCounterInc(traceLabel)
 				} else {
 					// some can't show error
 					c.JSON(500, gin.H{
@@ -75,9 +80,13 @@ func HandleResponse(c *gin.Context) error {
 						"code":     500,
 						"msg":      "Server Internal Error",
 					})
+					traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "500"}
+					metrics.Http.ResponseCodeCounterInc(traceLabel)
 				}
 			} else if errType == 1000 {
 				c.JSON(http.StatusUnauthorized, nil)
+				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "401"}
+				metrics.Http.ResponseCodeCounterInc(traceLabel)
 				// phanes Common errors handle
 			} else if errType > 1000 && errType < 2000 {
 				c.JSON(http.StatusOK, gin.H{
@@ -85,6 +94,8 @@ func HandleResponse(c *gin.Context) error {
 					"code":     errType,
 					"message":  e.Error(),
 				})
+				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
+				metrics.Http.ResponseCodeCounterInc(traceLabel)
 				// customer error handle here
 			} else if errType >= 2000 && errType < 3000 {
 				c.JSON(http.StatusOK, gin.H{
@@ -92,6 +103,8 @@ func HandleResponse(c *gin.Context) error {
 					"code":     errType,
 					"message":  e.Error(),
 				})
+				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
+				metrics.Http.ResponseCodeCounterInc(traceLabel)
 			}
 		}
 	}

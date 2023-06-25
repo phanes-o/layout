@@ -45,7 +45,7 @@ func Init() micro.Option {
 	router.Use(gin.Recovery())
 
 	// register routers
-	v1Group := router.Group("v1", middleware.LogAndTrace(), middleware.BaseMetric())
+	v1Group := router.Group("v1", middleware.OtelMiddleware())
 	v1.Init(v1Group)
 
 	utils.Throw(srv.Handle(srv.NewHandler(router)))
