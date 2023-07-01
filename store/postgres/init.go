@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 
 	"gorm.io/driver/postgres"
@@ -10,6 +11,22 @@ import (
 
 var db *gorm.DB
 
+type contextTxKey struct{}
+
+var ContextTxKey = contextTxKey{}
+
+func dbWithContext(ctx context.Context) *gorm.DB {
+	return GetDB(ctx)
+}
+
+func GetDB(ctx context.Context) *gorm.DB {
+	tx, ok := ctx.Value(ContextTxKey).(*gorm.DB)
+	if ok {
+		return tx
+	}
+	return db.WithContext(ctx)
+}
+
 func Init(connectAddr string) func() {
 	var (
 		err   error
@@ -17,7 +34,7 @@ func Init(connectAddr string) func() {
 	)
 
 	if db, err = gorm.Open(postgres.Open(connectAddr), &gorm.Config{}); err != nil {
-		log.Fatal(err.Error())
+		log.Error(err.Error())
 	}
 	if sqlDB, err = db.DB(); err != nil {
 		log.Fatal(err.Error())
