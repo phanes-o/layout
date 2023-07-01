@@ -10,6 +10,10 @@ import (
 
 var User = &user{}
 
+func init() {
+	RegisterRouter(&user{})
+}
+
 type user struct{}
 
 func (a *user) Init(r *gin.RouterGroup) {
