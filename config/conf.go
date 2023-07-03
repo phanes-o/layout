@@ -16,10 +16,11 @@ var (
 )
 
 type Config struct {
-	Name       string `json:"name" yaml:"name" toml:"name"`
-	Env        string `json:"env" yaml:"env" toml:"env"`
-	Version    string `json:"version" yaml:"version" toml:"version"`
-	HttpListen string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
+	Name        string `json:"name" yaml:"name" toml:"name"`
+	Env         string `json:"env" yaml:"env" toml:"env"`
+	Version     string `json:"version" yaml:"version" toml:"version"`
+	HttpListen  string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
+	AutoMigrate bool   `json:"auto_migrate" yaml:"auto_migrate" toml:"auto_migrate"`
 
 	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
 

@@ -2,6 +2,7 @@ name: phanes
 env: dev
 http_listen: :7771
 version: 0.1.0
+auto_migrate: true
 
 db:
 #  - addr: host=127.0.0.1 user=root password=root dbname=phanes port=5432

@@ -46,6 +46,9 @@ func Init(connectAddr string) func() {
 		panic(err)
 	}
 
+	for _, s := range migrates {
+		s.Init()
+	}
 	return func() {
 		if err = sqlDB.Close(); err != nil {
 			log.Error(err.Error())
