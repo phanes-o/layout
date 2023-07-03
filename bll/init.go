@@ -5,8 +5,10 @@ type Service interface {
 }
 
 // register service
-var services = []Service{
-	User,
+var services = []Service{}
+
+func Register(srv Service) {
+	services = append(services, srv)
 }
 
 func Init() func() {
