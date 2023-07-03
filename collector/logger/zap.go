@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"phanes/config"
+	"phanes/model"
 )
 
 type ZapLog struct {
@@ -90,8 +91,14 @@ func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
 	)
 
 	outputCore := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), syncer, level)
-	consoleCore := zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), os.Stdout, level)
-	core := zapcore.NewTee(consoleCore, outputCore)
+	var core zapcore.Core
+	switch config.Conf.Env {
+	case model.EnvProd:
+		core = zapcore.NewTee(outputCore)
+	case model.EnvDev:
+		consoleCore := zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), os.Stdout, level)
+		core = zapcore.NewTee(consoleCore, outputCore)
+	}
 
 	otelLogger := otelzap.New(
 		zap.New(core, zap.AddCaller(), zap.AddCallerSkip(2)),

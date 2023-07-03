@@ -10,7 +10,6 @@ import (
 	"go-micro.dev/v4/server"
 	"phanes/config"
 	"phanes/server/grpc/middleware"
-	v1 "phanes/server/grpc/v1"
 	"phanes/utils"
 )
 
@@ -26,7 +25,7 @@ func Init() micro.Option {
 	)
 	// register grpc services
 	// example: utils.Throw(micro.RegisterHandler(srv, new(App)))
-	utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
+	//utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
 
 	utils.Throw(srv.Start())
 	return micro.Server(srv)

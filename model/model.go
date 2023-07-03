@@ -2,6 +2,7 @@ package model
 
 const (
 	EnvProd = "product"
+	EnvDev  = "dev"
 )
 
 const (
