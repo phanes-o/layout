@@ -1,12 +1,10 @@
 package config
 
 import (
-	"github.com/go-redis/redis/v8"
 	"go-micro.dev/v4"
 )
 
 var (
-	KV           *redis.Client
 	Conf         *Config
 	MicroService micro.Service
 	EtcdAddr     = ""
@@ -19,12 +17,15 @@ type Config struct {
 	Name        string `json:"name" yaml:"name" toml:"name"`
 	Env         string `json:"env" yaml:"env" toml:"env"`
 	Version     string `json:"version" yaml:"version" toml:"version"`
-	HttpListen  string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
 	AutoMigrate bool   `json:"auto_migrate" yaml:"auto_migrate" toml:"auto_migrate"`
+
+	Http struct {
+		Listen        string `json:"listen" yaml:"listen" toml:"listen"`
+		ValidateTrans string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
+	}
 
 	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
 
-	// todo: support read and write split db
 	DB []struct {
 		Addr string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
 		Type string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
@@ -54,13 +55,13 @@ type Collect struct {
 		LogLevel   uint8  `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
 		Prefix     string `json:"prefix" yaml:"prefix" toml:"prefix"`
 		FileName   string `json:"file_name"  yaml:"file_name" toml:"file_name"`
-		BufferSize int    `json:"buffer_size", yaml:"buffer_size" toml:"buffer_size"`
+		BufferSize int    `json:"buffer_size" yaml:"buffer_size" toml:"buffer_size"`
 		Interval   int64  `json:"interval" yaml:"interval" toml:"interval"`
 	} `json:"log" yaml:"log" toml:"log"`
 
 	Trace struct {
 		Protocol string `json:"protocol" yaml:"protocol" toml:"protocol"` // trace report way "http" or "grpc"
-		Type     string `json: "type" yaml:"type" toml:"type"`            // trace report type "otel" or "jaeger" or "zipkin"
+		Type     string `json:"type" yaml:"type" toml:"type"`             // trace report type "otel" or "jaeger" or "zipkin"
 		Addr     string `json:"addr" yaml:"addr" toml:"addr"`
 	} `json:"trace" yaml:"trace" toml:"trace"`
 

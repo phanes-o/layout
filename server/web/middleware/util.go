@@ -14,10 +14,13 @@ import (
 	"go.uber.org/zap"
 	log "phanes/collector/logger"
 	"phanes/collector/metrics"
+	"phanes/config"
 	"phanes/errors"
 	"phanes/lib/trace"
 	"phanes/lib/translation"
 )
+
+var defaultValidateTrans = "en"
 
 func GetRequestParams(c *gin.Context) map[string]interface{} {
 	var params = make(map[string]interface{})
@@ -55,7 +58,10 @@ func HandleResponse(c *gin.Context) error {
 		traceID   = trace.TraceIDFromContext(c.Request.Context())
 		translate ut.Translator
 	)
-	if translate, err = translation.InitTrans("en"); err != nil {
+	if config.Conf.Http.ValidateTrans != "" {
+		defaultValidateTrans = config.Conf.Http.ValidateTrans
+	}
+	if translate, err = translation.InitTrans(defaultValidateTrans); err != nil {
 		return err
 	}
 
@@ -71,7 +77,7 @@ func HandleResponse(c *gin.Context) error {
 						"code":     errType,
 						"message":  RemoveTopStruct(errs.Translate(translate)),
 					})
-					traceLabel := prometheus.Labels{"StatusCode": "400"}
+					traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
 					metrics.Http.ResponseCodeCounterInc(traceLabel)
 				} else {
 					// some can't show error
@@ -87,7 +93,7 @@ func HandleResponse(c *gin.Context) error {
 				c.JSON(http.StatusUnauthorized, nil)
 				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "401"}
 				metrics.Http.ResponseCodeCounterInc(traceLabel)
-				// phanes Common errors handle
+				// hello Common errors handle
 			} else if errType > 1000 && errType < 2000 {
 				c.JSON(http.StatusOK, gin.H{
 					"trace_id": traceID,
@@ -118,12 +124,7 @@ func RemoveTopStruct(fields map[string]string) string {
 	}
 	var str string
 	for _, v := range res {
-		if len(str) == 0 {
-			str += v
-		} else {
-			str += ", " + v
-		}
+		return v
 	}
-
 	return str
 }
