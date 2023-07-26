@@ -75,7 +75,7 @@ func HandleResponse(c *gin.Context) error {
 					c.JSON(400, gin.H{
 						"trace_id": traceID,
 						"code":     errType,
-						"message":  RemoveTopStruct(errs.Translate(translate)),
+						"msg":      RemoveTopStruct(errs.Translate(translate)),
 					})
 					traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
 					metrics.Http.ResponseCodeCounterInc(traceLabel)
@@ -98,7 +98,7 @@ func HandleResponse(c *gin.Context) error {
 				c.JSON(http.StatusOK, gin.H{
 					"trace_id": traceID,
 					"code":     errType,
-					"message":  e.Error(),
+					"msg":      e.Error(),
 				})
 				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
 				metrics.Http.ResponseCodeCounterInc(traceLabel)
@@ -107,7 +107,7 @@ func HandleResponse(c *gin.Context) error {
 				c.JSON(http.StatusOK, gin.H{
 					"trace_id": traceID,
 					"code":     errType,
-					"message":  e.Error(),
+					"msg":      e.Error(),
 				})
 				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
 				metrics.Http.ResponseCodeCounterInc(traceLabel)

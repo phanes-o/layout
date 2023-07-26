@@ -5,6 +5,7 @@ import (
 	"os/signal"
 
 	sig "go-micro.dev/v4/util/signal"
+	"phanes/assistant"
 	"phanes/bll"
 	"phanes/client"
 	"phanes/collector"
@@ -29,6 +30,7 @@ func main() {
 			server.Init,
 			client.Init,
 			store.Init,
+			assistant.Init,
 			bll.Init,
 		}
 	)
