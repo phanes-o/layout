@@ -9,11 +9,11 @@ http:
 
 
 db:
-  - addr: host=127.0.0.1 user=postgres password=root dbname=hello port=5432
-      sslmode=disable TimeZone=Asia/Shanghai
-    pwd: root
-    type: postgres
-    user: root
+#  - addr: host=127.0.0.1 user=postgres password=root dbname=hello port=5432
+#      sslmode=disable TimeZone=Asia/Shanghai
+#    pwd: root
+#    type: postgres
+#    user: root
   - addr: 127.0.0.1:6379
     pwd: ""
     type: redis

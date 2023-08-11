@@ -2,12 +2,13 @@ package logger
 
 import (
 	"context"
+
 	"go.uber.org/zap/zapcore"
 )
 
 var defaultLogger Logger
 
-func InitLogger(l Logger) {
+func initLogger(l Logger) {
 	defaultLogger = l
 }
 

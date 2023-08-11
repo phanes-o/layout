@@ -1,8 +1,9 @@
 package logger
 
 import (
-	"go.uber.org/zap/zapcore"
 	"io"
+
+	"go.uber.org/zap/zapcore"
 	"phanes/config"
 )
 
@@ -16,13 +17,13 @@ func Init() func() {
 	}
 
 	if l.FileName != "" {
-		writers = append(writers, FileOutputWriter("./logs", l.FileName, 50, 3))
+		writers = append(writers, fileOutputWriter("./logs", l.FileName, 50, 3))
 	}
 	//writers = append(writers, os.Stderr)
 
 	// set your log level here
-	logger := NewZapLog(zapcore.Level(l.LogLevel), writers...)
-	InitLogger(logger)
+	logger := newZapLog(zapcore.Level(l.LogLevel), writers...)
+	initLogger(logger)
 
 	return func() {
 		logger.logger.Sync()

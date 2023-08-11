@@ -51,7 +51,7 @@ func main() {
 		cancels = append(cancels, fn())
 	}
 	log.Info("finished to init all component")
-
+ 
 	<-config.ExitC
 	log.Info("server shutdown!")
 }

@@ -1,13 +1,14 @@
 package logger
 
 import (
-	"gopkg.in/natefinch/lumberjack.v2"
 	"io"
 	"os"
 	"strings"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func FileOutputWriter(filePath string, fileName string, maxSize, maxAge int) io.Writer {
+func fileOutputWriter(filePath string, fileName string, maxSize, maxAge int) io.Writer {
 	var name string
 	if !exist(filePath) {
 		if err := os.MkdirAll(filePath, os.ModePerm); err != nil {

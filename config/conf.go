@@ -52,7 +52,7 @@ type Config struct {
 
 type Collect struct {
 	Log struct {
-		LogLevel   uint8  `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
+		LogLevel   int8   `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
 		Prefix     string `json:"prefix" yaml:"prefix" toml:"prefix"`
 		FileName   string `json:"file_name"  yaml:"file_name" toml:"file_name"`
 		BufferSize int    `json:"buffer_size" yaml:"buffer_size" toml:"buffer_size"`

@@ -13,78 +13,83 @@ import (
 	"phanes/model"
 )
 
-type ZapLog struct {
+type zapLog struct {
 	logger *otelzap.Logger
 	writer []io.Writer
+	prefix string
 }
 
-func (z *ZapLog) WithFields(fields ...zapcore.Field) Logger {
+func (z *zapLog) WithFields(fields ...zapcore.Field) Logger {
 	newLogger := z.logger.With(fields...)
-	newZap := &ZapLog{
+	newZap := &zapLog{
 		logger: otelzap.New(newLogger),
 		writer: z.writer,
 	}
 	return newZap
 }
 
-func (z *ZapLog) Ctx(ctx context.Context) Logger {
+func (z *zapLog) Ctx(ctx context.Context) Logger {
 	newCtx := z.logger.Ctx(ctx)
-	newZap := &ZapLog{
+	newZap := &zapLog{
 		logger: newCtx.Logger(),
 		writer: z.writer,
 	}
 	return newZap
 }
 
-func (z *ZapLog) Debug(msg string, fields ...zapcore.Field) {
-	z.logger.Debug(msg, fields...)
+func (z *zapLog) Debug(msg string, fields ...zapcore.Field) {
+	z.logger.Debug(z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) DebugCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.DebugContext(ctx, msg, fields...)
+func (z *zapLog) DebugCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.DebugContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) Info(msg string, fields ...zapcore.Field) {
-	z.logger.Info(msg, fields...)
+func (z *zapLog) Info(msg string, fields ...zapcore.Field) {
+	z.logger.Info(z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) InfoCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.InfoContext(ctx, msg, fields...)
+func (z *zapLog) InfoCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.InfoContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) Warn(msg string, fields ...zapcore.Field) {
-	z.logger.Warn(msg, fields...)
+func (z *zapLog) Warn(msg string, fields ...zapcore.Field) {
+	z.logger.Warn(z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) WarnCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.WarnContext(ctx, msg, fields...)
+func (z *zapLog) WarnCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.WarnContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) Error(msg string, fields ...zapcore.Field) {
-	z.logger.Error(msg, fields...)
+func (z *zapLog) Error(msg string, fields ...zapcore.Field) {
+	z.logger.Error(z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) ErrorCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.ErrorContext(ctx, msg, fields...)
+func (z *zapLog) ErrorCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.ErrorContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) Fatal(msg string, fields ...zapcore.Field) {
-	z.logger.Fatal(msg, fields...)
+func (z *zapLog) Fatal(msg string, fields ...zapcore.Field) {
+	z.logger.Fatal(z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) FatalCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.FatalContext(ctx, msg, fields...)
+func (z *zapLog) FatalCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.FatalContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func (z *ZapLog) PanicCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
-	z.logger.PanicContext(ctx, msg, fields...)
+func (z *zapLog) PanicCtx(ctx context.Context, msg string, fields ...zapcore.Field) {
+	z.logger.PanicContext(ctx, z.withPrefix(msg), fields...)
 }
 
-func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
+func (z *zapLog) withPrefix(msg string) string {
+	return z.prefix + " " + msg
+}
+
+func newZapLog(level zapcore.Level, out ...io.Writer) *zapLog {
 	encoderConfig := zap.NewProductionEncoderConfig()
-	encoderConfig.EncodeTime = CustomTimeEncoder
+	encoderConfig.EncodeTime = customTimeEncoder
 
-	syncer := NewBufferedWriteSyncer(
+	syncer := newBufferedWriteSyncer(
 		config.Conf.Collect.Log.BufferSize,
 		time.Duration(config.Conf.Collect.Log.Interval)*time.Second,
 		io.MultiWriter(out...),
@@ -106,13 +111,18 @@ func NewZapLog(level zapcore.Level, out ...io.Writer) *ZapLog {
 		otelzap.WithTraceIDField(true),
 	)
 
-	logger := &ZapLog{
+	logger := &zapLog{
 		logger: otelLogger,
 		writer: out,
 	}
+
+	if config.Conf.Collect.Log.Prefix != "" {
+		logger.prefix = config.Conf.Collect.Log.Prefix
+	}
+
 	return logger
 }
 
-func CustomTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format(config.Conf.Collect.Log.Prefix + " 2006-01-02 15:04:05.000"))
+func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
 }

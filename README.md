@@ -12,7 +12,7 @@
 ### Start command:
 ```shell
 go build -o phanes 
-./phanes --registry=etcd --registry_address=127.0.0.1:2379
+./phanes --registry=etcd --registry_address=127.0.0.1:2379 
 ./phanes --config=./script/config.yaml
 ```
 
