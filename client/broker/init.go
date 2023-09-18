@@ -17,8 +17,10 @@ func Init() func() {
 	}
 
 	return func() {
-		if err := PubSub.Disconnect(); err != nil {
-			log.Error(err.Error())
+		if PubSub != nil {
+			if err := PubSub.Disconnect(); err != nil {
+				log.Error(err.Error())
+			}
 		}
 	}
 }

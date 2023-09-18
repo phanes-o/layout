@@ -20,24 +20,32 @@ type Config struct {
 	AutoMigrate bool   `json:"auto_migrate" yaml:"auto_migrate" toml:"auto_migrate"`
 
 	Http struct {
-		Listen        string `json:"listen" yaml:"listen" toml:"listen"`
+		HttpListen    string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
 		ValidateTrans string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
+	}
+
+	Grpc struct {
+		GrpcListen      string `json:"grpc_listen" yaml:"grpc_listen" toml:"grpc_listen"`
+		DiscoveryListen string `json:"discovery_listen" yaml:"discovery_listen" toml:"discovery_listen"`
+		ValidateTrans   string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
 	}
 
 	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
 
 	DB []struct {
-		Addr string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
-		Type string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
-		User string `json:"user" yaml:"user" toml:"user"` // if addr not like Addr example or other need, you should set
-		Pwd  string `json:"pwd" yaml:"pwd" toml:"pwd"`
+		Addr    string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
+		Type    string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
+		User    string `json:"user" yaml:"user" toml:"user"` // if addr not like Addr example or other need, you should set
+		Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
+		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
 	} `json:"db" yaml:"db" toml:"db"`
 
 	Broker struct {
-		Type string `json:"type" yaml:"type" toml:"type"` // support: rabbitmq, nats
-		Addr string `json:"addr" yaml:"addr" toml:"addr"`
-		User string `json:"user" yaml:"user" toml:"user"`
-		Pwd  string `json:"pwd" yaml:"pwd" toml:"pwd"`
+		Type    string `json:"type" yaml:"type" toml:"type"` // support: rabbitmq, nats
+		Addr    string `json:"addr" yaml:"addr" toml:"addr"`
+		User    string `json:"user" yaml:"user" toml:"user"`
+		Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
+		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
 	} `json:"broker" yaml:"broker" toml:"broker"`
 
 	Traefik struct {

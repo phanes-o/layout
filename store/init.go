@@ -14,6 +14,9 @@ func Init() func() {
 
 	if len(config.Conf.DB) > 0 {
 		for _, db := range config.Conf.DB {
+			if !db.Enabled {
+				continue
+			}
 			switch db.Type {
 			case "mysql":
 				cancels = append(cancels, mysql.Init(db.Addr))

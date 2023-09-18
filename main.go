@@ -34,7 +34,6 @@ func main() {
 			bll.Init,
 		}
 	)
-
 	go func() {
 		sigint := make(chan os.Signal, 1)
 
@@ -51,7 +50,7 @@ func main() {
 		cancels = append(cancels, fn())
 	}
 	log.Info("finished to init all component")
- 
+
 	<-config.ExitC
 	log.Info("server shutdown!")
 }

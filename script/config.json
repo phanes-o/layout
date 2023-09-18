@@ -2,7 +2,16 @@
   "name": "phanes",
   "env": "dev",
   "version": "0.1.0",
-  "http_listen": ":7771",
+  "http": {
+    "http_listen": ":7771",
+    "validate_trans": "zh"
+  },
+
+  "grpc": {
+    "grpc_listen": ":9090",
+    "discovery_listen": "",
+    "validate_trans": "zh"
+  },
 
   "collect": {
     "log": {
@@ -24,12 +33,14 @@
 
   "db": [
     {
+      "enabled": false,
       "type": "postgres",
       "addr": "host=127.0.0.1 user=root password=root dbname=phanes port=5432 sslmode=disable TimeZone=Asia/Shanghai",
       "user": "root",
       "pwd": "root"
     },
     {
+        "enabled": false,
         "type": "redis",
         "addr": "127.0.0.1:6379",
         "user": "",
@@ -43,6 +54,7 @@
   },
 
   "broker": {
+    "enabled": false,
     "type": "rabbitmq",
     "addr": "amqp://coco:kk123123123@127.0.0.1:5672/",
     "user": "",

@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"phanes/config"
+	"phanes/lib/translation"
 	"strings"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
@@ -14,13 +17,15 @@ import (
 	"go.uber.org/zap"
 	log "phanes/collector/logger"
 	"phanes/collector/metrics"
-	"phanes/config"
 	"phanes/errors"
 	"phanes/lib/trace"
-	"phanes/lib/translation"
 )
 
-var defaultValidateTrans = "en"
+var (
+	defaultValidateTrans = "en"
+	translate            ut.Translator
+	once                 sync.Once
+)
 
 func GetRequestParams(c *gin.Context) map[string]interface{} {
 	var params = make(map[string]interface{})
@@ -54,16 +59,21 @@ func GetRequestParams(c *gin.Context) map[string]interface{} {
 
 func HandleResponse(c *gin.Context) error {
 	var (
-		err       error
-		traceID   = trace.TraceIDFromContext(c.Request.Context())
-		translate ut.Translator
+		err     error
+		traceID = trace.TraceIDFromContext(c.Request.Context())
 	)
+
 	if config.Conf.Http.ValidateTrans != "" {
 		defaultValidateTrans = config.Conf.Http.ValidateTrans
 	}
-	if translate, err = translation.InitTrans(defaultValidateTrans); err != nil {
-		return err
-	}
+
+	// initialize translation
+	once.Do(func() {
+		if translate, err = translation.InitTrans(defaultValidateTrans); err != nil {
+			log.ErrorCtx(c, "translation InitTrans error", zap.String("err", err.Error()))
+			return
+		}
+	})
 
 	if len(c.Errors) > 0 {
 		for _, e := range c.Errors {
