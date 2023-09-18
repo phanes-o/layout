@@ -26,8 +26,8 @@ var (
 func Init() micro.Option {
 	webName = config.Conf.Name + "-http"
 
-	if config.Conf.Http.Listen != "" {
-		defaultListenAddr = config.Conf.Http.Listen
+	if config.Conf.Http.HttpListen != "" {
+		defaultListenAddr = config.Conf.Http.HttpListen
 	}
 
 	srv = http.NewServer(

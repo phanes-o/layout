@@ -24,7 +24,7 @@ import (
 var (
 	defaultValidateTrans = "en"
 	translate            ut.Translator
-	lock                 sync.Mutex
+	once                 sync.Once
 )
 
 func GetRequestParams(c *gin.Context) map[string]interface{} {
@@ -67,13 +67,13 @@ func HandleResponse(c *gin.Context) error {
 		defaultValidateTrans = config.Conf.Http.ValidateTrans
 	}
 
-	if translate == nil {
-		lock.Lock()
-		defer lock.Unlock()
+	// initialize translation
+	once.Do(func() {
 		if translate, err = translation.InitTrans(defaultValidateTrans); err != nil {
-			return err
+			log.ErrorCtx(c, "translation InitTrans error", zap.String("err", err.Error()))
+			return
 		}
-	}
+	})
 
 	if len(c.Errors) > 0 {
 		for _, e := range c.Errors {

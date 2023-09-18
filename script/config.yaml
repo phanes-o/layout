@@ -4,7 +4,11 @@ version: 0.1.0
 auto_migrate: true
 
 http:
-  listen: :7771
+  http_listen: :7771
+  validate_trans: zh
+grpc:
+  grpc_listen: :9090
+  discovery_listen: ""
   validate_trans: zh
 
 
@@ -14,12 +18,15 @@ db:
 #    pwd: root
 #    type: postgres
 #    user: root
+#    enabled: false
   - addr: 127.0.0.1:6379
     pwd: ""
     type: redis
     user: ""
+    enabled: false
 
 broker:
+  enabled: false
   addr: amqp://coco:kk123123123@127.0.0.1:5672/
   pwd: ""
   type: rabbitmq

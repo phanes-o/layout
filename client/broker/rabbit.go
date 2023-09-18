@@ -10,6 +10,9 @@ import (
 var defaultRabbitMQAddress = "amqp://guest:guest@localhost:5672"
 
 func InitRabbit() broker.Broker {
+	if !config.Conf.Broker.Enabled {
+		return nil
+	}
 	if config.Conf.Broker.Addr != "" {
 		defaultRabbitMQAddress = config.Conf.Broker.Addr
 	}
