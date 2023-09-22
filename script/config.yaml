@@ -7,7 +7,7 @@ http:
   http_listen: :7771
   validate_trans: zh
 grpc:
-  grpc_listen: :9090
+  grpc_listen: :7090
   discovery_listen: ""
   validate_trans: zh
 

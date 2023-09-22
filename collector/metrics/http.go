@@ -5,6 +5,10 @@ import (
 	"phanes/config"
 )
 
+func init() {
+	Register(Http)
+}
+
 var Http = &httpRecorder{}
 
 type httpRecorder struct {

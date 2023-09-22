@@ -36,7 +36,9 @@ func Init() micro.Option {
 	srv := grpc.NewServer(opts...)
 	// register grpc services
 	// example: utils.Throw(micro.RegisterHandler(srv, new(App)))
-	//utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
+
+	// ⚠️Waring!!!: Your service struct Name Must seem to the .proto file service Name
+	// utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
 
 	utils.Throw(srv.Start())
 	return micro.Server(srv)

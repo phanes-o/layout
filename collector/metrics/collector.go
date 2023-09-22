@@ -6,6 +6,8 @@ type MetricInit interface {
 	Init() []prometheus.Collector
 }
 
-var metrics = []MetricInit{
-	Http,
+var metrics = []MetricInit{}
+
+func Register(m MetricInit) {
+	metrics = append(metrics, m)
 }

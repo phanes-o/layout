@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"fmt"
+
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
@@ -31,19 +32,20 @@ func ClientTraceWrapper() client.CallWrapper {
 
 			attrs := []attribute.KeyValue{
 				RPCSystemGRPC,
-				attribute.String("rpc.system", "admin-grpc"),
+				attribute.String("rpc.system", "grpc"),
 				attribute.String("rpc.service", req.Service()),
 				attribute.String("rpc.method", req.Method()),
+				attribute.String("rpc.method", utils.ToJsonString(req.Body())),
 			}
+			ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindClient), trace.WithAttributes(attrs...))
 
 			libTrace.Inject(ctx, m)
 			ctx = metadata.NewContext(ctx, m)
 
-			ctx, span := tracer.Start(ctx, spanName, trace.WithSpanKind(trace.SpanKindClient), trace.WithAttributes(attrs...))
 
 			defer func() {
 				span.SetAttributes(
-					attribute.String("rpc.req", utils.ToJsonString(req.Body())))
+					attribute.String("rpc.req", utils.ToJsonString(rsp)))
 				if err != nil {
 					span.SetAttributes(
 						// 设置事件为异常
