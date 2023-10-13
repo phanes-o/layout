@@ -49,8 +49,10 @@ collect:
     # metrics will listen a http port
     # example: localhost:2223/metrics
     listen: ":2223"
+    enabled: false
   trace:
     addr: "http://localhost:14268/api/traces"
+    enabled: false
 
 traefik:
   # reverse proxy type support: tcp udp http grpc(h2c)

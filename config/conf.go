@@ -68,12 +68,14 @@ type Collect struct {
 	} `json:"log" yaml:"log" toml:"log"`
 
 	Trace struct {
+		Enabled  bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
 		Protocol string `json:"protocol" yaml:"protocol" toml:"protocol"` // trace report way "http" or "grpc"
 		Type     string `json:"type" yaml:"type" toml:"type"`             // trace report type "otel" or "jaeger" or "zipkin"
 		Addr     string `json:"addr" yaml:"addr" toml:"addr"`
 	} `json:"trace" yaml:"trace" toml:"trace"`
 
 	Metric struct {
-		Listen string `json:"listen" yaml:"listen" toml:"listen"` // prometheus fatch addr
+		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+		Listen  string `json:"listen" yaml:"listen" toml:"listen"` // prometheus fatch addr
 	} `json:"metric" yaml:"metric" toml:"metric"`
 }
