@@ -24,9 +24,11 @@
       }
     },
     "trace": {
+      "enabled": false,
       "addr": ""
     },
     "metric": {
+      "enabled": false,
       "addr": ""
     }
   },

@@ -41,9 +41,11 @@ pwd = ""
 redis_key = "log_list"
 
 [collect.metric]
+enabled = false
 addr = ""
 
 [collect.trace]
+enabled = false
 addr = ""
 
 [proxy]

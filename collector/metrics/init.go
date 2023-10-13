@@ -18,6 +18,10 @@ var defaultListenAddr = ":2223"
 var Meter metricApi.Meter
 
 func Init() func() {
+	if !config.Conf.Collect.Metric.Enabled {
+		return func() {}
+	}
+
 	var registries = make([]client.Collector, 0, 0)
 
 	for _, m := range metrics {

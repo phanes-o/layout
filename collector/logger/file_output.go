@@ -22,7 +22,7 @@ func fileOutputWriter(filePath string, fileName string, maxSize, maxAge int) io.
 	writer := &lumberjack.Logger{
 		Filename:   name,
 		MaxSize:    maxSize, // megabytes default 50
-		MaxBackups: 3,
+		MaxBackups: 10,
 		MaxAge:     maxAge, // days default 3
 		Compress:   true,
 	}

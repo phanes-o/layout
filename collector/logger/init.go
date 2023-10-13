@@ -17,7 +17,7 @@ func Init() func() {
 	}
 
 	if l.FileName != "" {
-		writers = append(writers, fileOutputWriter("./logs", l.FileName, 50, 3))
+		writers = append(writers, fileOutputWriter("./logs", l.FileName, 500, 3))
 	}
 	//writers = append(writers, os.Stderr)
 
