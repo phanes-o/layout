@@ -5,10 +5,10 @@ import (
 	"net"
 	"strings"
 
+	"github.com/phanes-o/lib/traefik"
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4/server"
 	"go-micro.dev/v4/util/addr"
-	"phanes/lib/traefik"
-	"phanes/utils"
 )
 
 func Register(name string, srv server.Server) error {

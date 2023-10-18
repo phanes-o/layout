@@ -5,20 +5,20 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"phanes/config"
-	"phanes/lib/translation"
 	"strings"
 	"sync"
 
+	"phanes/config"
+	"phanes/lib/translation"
+
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
+	"github.com/phanes-o/lib/otel/trace"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/zap"
 	log "phanes/collector/logger"
 	"phanes/collector/metrics"
 	"phanes/errors"
-	"phanes/lib/trace"
 )
 
 var (
@@ -75,55 +75,31 @@ func HandleResponse(c *gin.Context) error {
 		}
 	})
 
-	if len(c.Errors) > 0 {
-		for _, e := range c.Errors {
-			err = e
-			errType := errors.GetType(e.Err)
-			if errType == errors.None {
-				// check request params
-				if errs, ok := e.Err.(validator.ValidationErrors); ok {
-					c.JSON(400, gin.H{
-						"trace_id": traceID,
-						"code":     errType,
-						"msg":      RemoveTopStruct(errs.Translate(translate)),
-					})
-					traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
-					metrics.Http.ResponseCodeCounterInc(traceLabel)
-				} else {
-					// some can't show error
-					c.JSON(500, gin.H{
-						"trace_id": traceID,
-						"code":     500,
-						"msg":      "Server Internal Error",
-					})
-					traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "500"}
-					metrics.Http.ResponseCodeCounterInc(traceLabel)
-				}
-			} else if errType == 1000 {
-				c.JSON(http.StatusUnauthorized, nil)
-				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "401"}
-				metrics.Http.ResponseCodeCounterInc(traceLabel)
-				// hello Common errors handle
-			} else if errType > 1000 && errType < 2000 {
-				c.JSON(http.StatusOK, gin.H{
-					"trace_id": traceID,
-					"code":     errType,
-					"msg":      e.Error(),
-				})
-				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
-				metrics.Http.ResponseCodeCounterInc(traceLabel)
-				// customer error handle here
-			} else if errType >= 2000 && errType < 3000 {
-				c.JSON(http.StatusOK, gin.H{
-					"trace_id": traceID,
-					"code":     errType,
-					"msg":      e.Error(),
-				})
-				traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "200"}
-				metrics.Http.ResponseCodeCounterInc(traceLabel)
-			}
+	if len(c.Errors) == 0 {
+		return nil
+	}
+
+	err = c.Errors[0].Err
+	errType := errors.GetType(err)
+
+	errHandler := NewHttpErrorHandler(err)
+
+	if errType == errors.None {
+		errHandler.Unexportable(c)
+
+		traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "500"}
+		if config.Conf.Collect.Metric.Enabled {
+			metrics.Http.ResponseCodeCounterInc(traceLabel)
+		}
+	} else {
+		errHandler.Exportable(c)
+
+		traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
+		if config.Conf.Collect.Metric.Enabled {
+			metrics.Http.ResponseCodeCounterInc(traceLabel)
 		}
 	}
+
 	return err
 }
 

@@ -8,6 +8,8 @@ import (
 	"github.com/asim/go-micro/plugins/config/encoder/toml/v4"
 	"github.com/asim/go-micro/plugins/config/encoder/yaml/v4"
 	"github.com/asim/go-micro/plugins/config/source/etcd/v4"
+	"github.com/phanes-o/lib/traefik"
+	"github.com/phanes-o/utils"
 	"github.com/urfave/cli/v2"
 	"go-micro.dev/v4/cmd"
 	"go-micro.dev/v4/config"
@@ -17,9 +19,7 @@ import (
 	"go-micro.dev/v4/config/reader/json"
 	"go-micro.dev/v4/config/source"
 	"go-micro.dev/v4/config/source/file"
-	"phanes/lib/traefik"
 	"phanes/model"
-	"phanes/utils"
 )
 
 func Init() func() {

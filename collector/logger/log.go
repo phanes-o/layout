@@ -3,36 +3,25 @@ package logger
 import (
 	"context"
 
+	"github.com/phanes-o/lib/otel/logger"
 	"go.uber.org/zap/zapcore"
 )
 
-var defaultLogger Logger
+var defaultLogger logger.Logger
 
-func initLogger(l Logger) {
+func initLogger(l logger.Logger) {
 	defaultLogger = l
 }
 
-type Logger interface {
-	WithFields(fields ...zapcore.Field) Logger
-	Ctx(ctx context.Context) Logger
-	Debug(msg string, fields ...zapcore.Field)
-	DebugCtx(ctx context.Context, msg string, fields ...zapcore.Field)
-	Info(msg string, fields ...zapcore.Field)
-	InfoCtx(ctx context.Context, msg string, fields ...zapcore.Field)
-	Warn(msg string, fields ...zapcore.Field)
-	WarnCtx(ctx context.Context, msg string, fields ...zapcore.Field)
-	Error(msg string, fields ...zapcore.Field)
-	ErrorCtx(ctx context.Context, msg string, fields ...zapcore.Field)
-	Fatal(msg string, fields ...zapcore.Field)
-	FatalCtx(ctx context.Context, msg string, fields ...zapcore.Field)
-	PanicCtx(ctx context.Context, msg string, fields ...zapcore.Field)
+func GetLogger() logger.Logger {
+	return defaultLogger
 }
 
-func WithContext(ctx context.Context) Logger {
+func WithContext(ctx context.Context) logger.Logger {
 	return defaultLogger.Ctx(ctx)
 }
 
-func WithFields(fields ...zapcore.Field) Logger {
+func WithFields(fields ...zapcore.Field) logger.Logger {
 	return defaultLogger.WithFields(fields...)
 }
 

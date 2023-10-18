@@ -4,10 +4,10 @@ import (
 	"context"
 	"time"
 
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4/server"
 	"go.uber.org/zap"
 	log "phanes/collector/logger"
-	"phanes/utils"
 )
 
 func Log() server.HandlerWrapper {

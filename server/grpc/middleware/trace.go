@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	libTrace "github.com/phanes-o/lib/otel/trace"
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
@@ -14,8 +16,6 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 	"go.opentelemetry.io/otel/trace"
-	libTrace "phanes/lib/trace"
-	"phanes/utils"
 )
 
 func ClientTraceWrapper() client.CallWrapper {

@@ -2,9 +2,9 @@ package broker
 
 import (
 	"github.com/asim/go-micro/plugins/broker/rabbitmq/v4"
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4/broker"
 	"phanes/config"
-	"phanes/utils"
 )
 
 var defaultRabbitMQAddress = "amqp://guest:guest@localhost:5672"

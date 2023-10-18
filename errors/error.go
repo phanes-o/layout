@@ -59,6 +59,10 @@ func Is(err error, target error) bool {
 	return errors.Is(err, target)
 }
 
+func As(err error, target error) bool {
+	return errors.As(err, target)
+}
+
 func Cause(err error) error {
 	return errors.Cause(err)
 }

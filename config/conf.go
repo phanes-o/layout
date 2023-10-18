@@ -21,6 +21,7 @@ type Config struct {
 
 	Http struct {
 		HttpListen    string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
+		// support en/zh
 		ValidateTrans string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
 	}
 
@@ -58,9 +59,10 @@ type Config struct {
 	} `json:"traefik" yaml:"traefik" toml:"traefik"`
 }
 
+
 type Collect struct {
 	Log struct {
-		LogLevel   int8   `json:"log_level" yaml:"log_level" toml:"log_level"` // log level support -1:5
+		Level int8 `json:"log_level" yaml:"log_level" toml:"log_level"` // logger level support -1:5
 		Prefix     string `json:"prefix" yaml:"prefix" toml:"prefix"`
 		FileName   string `json:"file_name"  yaml:"file_name" toml:"file_name"`
 		BufferSize int    `json:"buffer_size" yaml:"buffer_size" toml:"buffer_size"`

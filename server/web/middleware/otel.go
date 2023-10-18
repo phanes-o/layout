@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/phanes-o/utils"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/zap"
 	"phanes/collector/metrics"
-	"phanes/utils"
+	"phanes/config"
 
 	log "phanes/collector/logger"
 
@@ -30,6 +31,7 @@ func OtelMiddleware() gin.HandlerFunc {
 			traceID  string
 			spanName = fmt.Sprintf("%s-%s", c.Request.URL, c.Request.Method)
 		)
+
 		ctx, span = tracer.Start(c.Request.Context(), spanName)
 		traceID = span.SpanContext().TraceID().String()
 		traceLabel := prometheus.Labels{"TraceID": traceID}
@@ -38,12 +40,16 @@ func OtelMiddleware() gin.HandlerFunc {
 		span.SetAttributes(attribute.String("remote_addr", c.Request.RemoteAddr))
 		span.SetAttributes(attribute.String("request_params", utils.ToJsonString(params)))
 		c.Request = c.Request.WithContext(ctx)
-		metrics.Http.RequestCountInc(traceLabel)
 
+		if config.Conf.Collect.Metric.Enabled {
+			metrics.Http.RequestCountInc(traceLabel)
+		}
 		defer func() {
 			if err != nil {
 				span.RecordError(err)
-				metrics.Http.RequestErrorInc(traceLabel)
+				if config.Conf.Collect.Metric.Enabled {
+					metrics.Http.RequestErrorInc(traceLabel)
+				}
 			}
 			span.End()
 		}()
@@ -64,6 +70,7 @@ func OtelMiddleware() gin.HandlerFunc {
 			zap.String("response", newWriter.body.String()),
 			zap.Int64("timestamp", time.Now().UnixNano()),
 			zap.Int("response-status", c.Writer.Status()),
+			zap.String("latency", time.Now().Sub(start).String()),
 		)
 
 		if err != nil {
@@ -75,7 +82,9 @@ func OtelMiddleware() gin.HandlerFunc {
 		resp := newWriter.body.String()
 		span.SetAttributes(attribute.String("response_body", resp))
 		span.SetAttributes(attribute.String("response_status", fmt.Sprintf("%d", c.Writer.Status())))
-		metrics.Http.RequestTimeDurationRecord(time.Since(start).Seconds(), traceLabel)
+		if config.Conf.Collect.Metric.Enabled {
+			metrics.Http.RequestTimeDurationRecord(time.Since(start).Seconds(), traceLabel)
+		}
 	}
 }
 

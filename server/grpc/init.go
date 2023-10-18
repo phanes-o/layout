@@ -5,12 +5,12 @@ import (
 
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/server/grpc/v4"
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/registry"
 	"go-micro.dev/v4/server"
 	"phanes/config"
 	"phanes/server/grpc/middleware"
-	"phanes/utils"
 )
 
 func Init() micro.Option {

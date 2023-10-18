@@ -37,9 +37,9 @@ collect:
   log:
     # DebugLevel = -1, InfoLevel = 0, WarnLevel = 1 ErrorLevel = 2, DPanicLevel = 3, PanicLevel = 4, FatalLevel = 5
     level: -1
-    # log file name
+    # logger file name
     file_name: admin
-    # log print prefix
+    # logger print prefix
     prefix: "[PHANES]"
     # will buffer up to 4096 kilobytes of logs,
     # waiting at most 10 seconds between flushes.
@@ -52,7 +52,10 @@ collect:
     enabled: false
   trace:
     addr: "http://localhost:14268/api/traces"
-    enabled: false
+    enabled: true
+    protocol: http
+    type: jaeger
+
 
 traefik:
   # reverse proxy type support: tcp udp http grpc(h2c)

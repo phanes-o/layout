@@ -2,9 +2,9 @@ package broker
 
 import (
 	"github.com/asim/go-micro/plugins/broker/nats/v4"
+	"github.com/phanes-o/utils"
 	"go-micro.dev/v4/broker"
 	"phanes/config"
-	"phanes/utils"
 )
 
 var defaultNatsAddress = "nats://127.0.0.1:1222"
