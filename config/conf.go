@@ -17,37 +17,48 @@ type Config struct {
 	Name        string `json:"name" yaml:"name" toml:"name"`
 	Env         string `json:"env" yaml:"env" toml:"env"`
 	Version     string `json:"version" yaml:"version" toml:"version"`
-	AutoMigrate bool   `json:"auto_migrate" yaml:"auto_migrate" toml:"auto_migrate"`
 
-	Http struct {
-		HttpListen    string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
-		// support en/zh
-		ValidateTrans string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
+	Server struct {
+		Http struct {
+			Enabled    bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+			HttpListen string `json:"http_listen" yaml:"http_listen" toml:"http_listen"`
+			// support en/zh
+			ValidateTrans string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
+		} `json:"http" yaml:"http" toml:"http"`
+
+		Grpc struct {
+			Enabled         bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+			GrpcListen      string `json:"grpc_listen" yaml:"grpc_listen" toml:"grpc_listen"`
+			DiscoveryListen string `json:"discovery_listen" yaml:"discovery_listen" toml:"discovery_listen"`
+			ValidateTrans   string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
+		}
+	} `json:"server" yaml:"server" toml:"server"`
+
+	Event struct {
+		Enabled     bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+		TopicPrefix string `json:"topic_prefix" yaml:"topic_prefix" toml:"topic_prefix"`
+		Broker      Broker `json:"broker" yaml:"broker" toml:"broker"`
 	}
 
-	Grpc struct {
-		GrpcListen      string `json:"grpc_listen" yaml:"grpc_listen" toml:"grpc_listen"`
-		DiscoveryListen string `json:"discovery_listen" yaml:"discovery_listen" toml:"discovery_listen"`
-		ValidateTrans   string `json:"validate_trans" yaml:"validateTrans" toml:"validate_trans"`
-	}
-
-	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
-
-	DB []struct {
-		Addr    string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
-		Type    string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
-		User    string `json:"user" yaml:"user" toml:"user"` // if addr not like Addr example or other need, you should set
-		Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
+	Cache struct {
 		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
-	} `json:"db" yaml:"db" toml:"db"`
-
-	Broker struct {
-		Type    string `json:"type" yaml:"type" toml:"type"` // support: rabbitmq, nats
+		Type    string `json:"type" yaml:"type" toml:"type"` // support redis, memcache, local
 		Addr    string `json:"addr" yaml:"addr" toml:"addr"`
 		User    string `json:"user" yaml:"user" toml:"user"`
 		Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
-		Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
-	} `json:"broker" yaml:"broker" toml:"broker"`
+	} `json:"cache" yaml:"cache" toml:"cache"`
+
+	Collect Collect `json:"collect" yaml:"collect" toml:"collect"`
+
+	Store struct {
+		Enabled     bool `json:"enabled" yaml:"enabled" toml:"enabled"`
+		AutoMigrate bool `json:"auto_migrate" yaml:"auto_migrate" toml:"auto_migrate"`
+		DB          []DB `json:"db" yaml:"db" toml:"db"`
+	} `json:"store" yaml:"store" toml:"store"`
+
+	Client struct {
+		Broker Broker `json:"broker" yaml:"broker" toml:"broker"`
+	} `json:"client" yaml:"client" toml:"client"`
 
 	Traefik struct {
 		Type    string `json:"type" yaml:"type" toml:"type"`          // support tcp,http,grpc,udp
@@ -59,11 +70,28 @@ type Config struct {
 	} `json:"traefik" yaml:"traefik" toml:"traefik"`
 }
 
+type Broker struct {
+	Type    string `json:"type" yaml:"type" toml:"type"` // support: rabbitmq, nats
+	Addr    string `json:"addr" yaml:"addr" toml:"addr"`
+	User    string `json:"user" yaml:"user" toml:"user"`
+	Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
+	Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+}
+
+type DB struct {
+	Addr    string `json:"addr" yaml:"addr" toml:"addr"` // host=127.0.0.1 user=root password=root dbname=signal port=5432 sslmode=disable TimeZone=Asia/Shanghai
+	Type    string `json:"type" yaml:"type" toml:"type"` // postgres, mysql, sqlite, mongo
+	User    string `json:"user" yaml:"user" toml:"user"` // if addr not like Addr example or other need, you should set
+	Pwd     string `json:"pwd" yaml:"pwd" toml:"pwd"`
+	Enabled bool   `json:"enabled" yaml:"enabled" toml:"enabled"`
+}
+
 
 type Collect struct {
 	Log struct {
 		Level int8 `json:"log_level" yaml:"log_level" toml:"log_level"` // logger level support -1:5
 		Prefix     string `json:"prefix" yaml:"prefix" toml:"prefix"`
+		Path       string `json:"path" yaml:"path" toml:"path"`
 		FileName   string `json:"file_name"  yaml:"file_name" toml:"file_name"`
 		BufferSize int    `json:"buffer_size" yaml:"buffer_size" toml:"buffer_size"`
 		Interval   int64  `json:"interval" yaml:"interval" toml:"interval"`

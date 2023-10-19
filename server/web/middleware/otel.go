@@ -68,8 +68,7 @@ func OtelMiddleware() gin.HandlerFunc {
 			zap.String("trace_flag", span.SpanContext().TraceFlags().String()),
 			zap.String("request", utils.ToJsonString(params)),
 			zap.String("response", newWriter.body.String()),
-			zap.Int64("timestamp", time.Now().UnixNano()),
-			zap.Int("response-status", c.Writer.Status()),
+			zap.Int("status", c.Writer.Status()),
 			zap.String("latency", time.Now().Sub(start).String()),
 		)
 

@@ -1,30 +1,50 @@
-name = "phanes"
+name = "Phanes"
 env = "dev"
 version = "0.1.0"
-[http]
+
+[server.http]
 http_listen = ":7771"
 validate_trans = "zh"
 
-[grpc]
-grpc_listen = ":9090"
+[server.grpc]
+grpc_listen = ":7090"
 discovery_listen = ""
 validate_trans = "zh"
 
-[[db]]
+[cache]
 enabled = false
-addr = "host=127.0.0.1 user=root password=root dbname=phanes port=5432 sslmode=disable TimeZone=Asia/Shanghai"
-pwd = "root"
-type = "postgres"
-user = "root"
-
-[[db]]
-enabled = false
+type = "redis"
 addr = "127.0.0.1:6379"
 pwd = ""
-type = "redis"
-user = ""
 
-[broker]
+[store]
+enabled = true
+auto_migrate = true
+
+  [[store.db]]
+  addr = "host=127.0.0.1 user=postgres password=root dbname=hello port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+  pwd = "root"
+  type = "postgres"
+  user = "root"
+  enabled = false
+
+  [[store.db]]
+  addr = "127.0.0.1:6379"
+  pwd = ""
+  type = "redis"
+  user = ""
+  enabled = false
+
+[event]
+enabled = false
+topic_prefix = "phanes"
+
+  [event.broker]
+  addr = ""
+  pwd = ""
+  type = "kafka"
+
+[client.broker]
 enabled = false
 addr = "amqp://coco:kk123123123@127.0.0.1:5672/"
 pwd = ""
@@ -32,27 +52,25 @@ type = "rabbitmq"
 user = ""
 
 [collect.log]
+level = -1
 file_name = "admin"
-prefix = "【Phanes】"
-
-[collect.log.redis]
-addr = ""
-pwd = ""
-redis_key = "log_list"
+prefix = "[PHANES]"
+buffer_size = 4_096
+interval = 10
 
 [collect.metric]
+listen = ":2223"
 enabled = false
-addr = ""
 
 [collect.trace]
-enabled = false
-addr = ""
-
-[proxy]
-domain = "http://127.0.0.1"
-prefix = "/phanes"
+addr = "http://localhost:14268/api/traces"
+enabled = true
+protocol = "http"
+type = "jaeger"
 
 [traefik]
+type = "tcp"
+rule = "&&"
+tls = true
 domain = "test.com"
-enabled = false
-prefix = "/phanes"
+enabled = true

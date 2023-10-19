@@ -7,6 +7,7 @@ import (
 	sig "go-micro.dev/v4/util/signal"
 	"phanes/assistant"
 	"phanes/bll"
+	"phanes/cache"
 	"phanes/client"
 	"phanes/collector"
 	log "phanes/collector/logger"
@@ -27,6 +28,7 @@ func main() {
 			config.Init,
 			collector.Init,
 			event.Init,
+			cache.Init,
 			server.Init,
 			client.Init,
 			store.Init,

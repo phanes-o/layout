@@ -10,8 +10,8 @@ import (
 var defaultNatsAddress = "nats://127.0.0.1:1222"
 
 func InitNats() broker.Broker {
-	if config.Conf.Broker.Addr != "" {
-		defaultNatsAddress = config.Conf.Broker.Addr
+	if config.Conf.Client.Broker.Addr != "" {
+		defaultNatsAddress = config.Conf.Client.Broker.Addr
 	}
 	b := nats.NewBroker(broker.Addrs(defaultNatsAddress))
 	utils.Throw(b.Connect())

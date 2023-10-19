@@ -29,7 +29,6 @@ var (
 
 func GetRequestParams(c *gin.Context) map[string]interface{} {
 	var params = make(map[string]interface{})
-
 	switch c.Request.Method {
 	case http.MethodGet:
 		splits := strings.Split(c.Request.URL.String(), "?")
@@ -60,11 +59,12 @@ func GetRequestParams(c *gin.Context) map[string]interface{} {
 func HandleResponse(c *gin.Context) error {
 	var (
 		err     error
+		conf    = config.Conf.Server.Http
 		traceID = trace.TraceIDFromContext(c.Request.Context())
 	)
 
-	if config.Conf.Http.ValidateTrans != "" {
-		defaultValidateTrans = config.Conf.Http.ValidateTrans
+	if conf.ValidateTrans != "" {
+		defaultValidateTrans = conf.ValidateTrans
 	}
 
 	// initialize translation
@@ -87,15 +87,15 @@ func HandleResponse(c *gin.Context) error {
 	if errType == errors.None {
 		errHandler.Unexportable(c)
 
-		traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "500"}
 		if config.Conf.Collect.Metric.Enabled {
+			traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "500"}
 			metrics.Http.ResponseCodeCounterInc(traceLabel)
 		}
 	} else {
 		errHandler.Exportable(c)
 
-		traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
 		if config.Conf.Collect.Metric.Enabled {
+			traceLabel := prometheus.Labels{"TraceID": traceID, "StatusCode": "400"}
 			metrics.Http.ResponseCodeCounterInc(traceLabel)
 		}
 	}

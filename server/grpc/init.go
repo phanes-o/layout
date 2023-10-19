@@ -25,12 +25,12 @@ func Init() micro.Option {
 		server.WrapHandler(middleware.Log()),
 	}
 
-	if config.Conf.Grpc.GrpcListen != "" {
-		opts = append(opts, server.Address(config.Conf.Grpc.GrpcListen))
+	if config.Conf.Server.Grpc.GrpcListen != "" {
+		opts = append(opts, server.Address(config.Conf.Server.Grpc.GrpcListen))
 	}
 
-	if config.Conf.Grpc.DiscoveryListen != "" {
-		opts = append(opts, server.Advertise(config.Conf.Grpc.DiscoveryListen))
+	if config.Conf.Server.Grpc.DiscoveryListen != "" {
+		opts = append(opts, server.Advertise(config.Conf.Server.Grpc.DiscoveryListen))
 	}
 
 	srv := grpc.NewServer(opts...)

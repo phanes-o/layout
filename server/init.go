@@ -23,7 +23,7 @@ func Init() func() {
 		micro.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
 		micro.AfterStop(AfterExit),
 		// client trace wrapper
-		micro.Client(grpc.NewClient(client.WrapCall(middleware.ClientTraceWrapper()))),
+		micro.Client(grpc.NewClient(client.WrapCall(middleware.ClientTraceWrapper()), client.Retries(0))),
 		// choose you needed wrapper
 		micro.WrapClient(roundrobin.NewClientWrapper()),
 		webServer.Init(),

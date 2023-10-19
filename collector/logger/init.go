@@ -19,11 +19,13 @@ func Init() func() {
 	if l.FileName != "" {
 		writers = append(writers, logger.NewFileWriter("./logs", l.FileName, 500, 3))
 	}
-	//writers = append(writers, os.Stderr)
 
 	log := logger.NewZapLog(
 		logger.WithLevel(l.Level),
 		logger.WithWriters(writers...),
+		logger.WithPrefix(l.Prefix),
+		logger.AddCallerSkip(2),
+		logger.WithStdout(true),
 	)
 	// set your logger level here
 	initLogger(log)

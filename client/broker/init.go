@@ -10,7 +10,7 @@ import (
 var pubSub broker.Broker
 
 func Init() func() {
-	switch config.Conf.Broker.Type {
+	switch config.Conf.Client.Broker.Type {
 	case "rabbitmq":
 		pubSub = InitRabbit()
 	case "nats":

@@ -1,36 +1,53 @@
-name: hello
+name: Phanes
 env: dev
 version: 0.1.0
-auto_migrate: true
 
-http:
-  http_listen: :7771
-  validate_trans: zh
-grpc:
-  grpc_listen: :7090
-  discovery_listen: ""
-  validate_trans: zh
+server:
+  http:
+    http_listen: :7771
+    validate_trans: zh
+  grpc:
+    grpc_listen: :7090
+    discovery_listen: ""
+    validate_trans: zh
 
-
-db:
-#  - addr: host=127.0.0.1 user=postgres password=root dbname=hello port=5432
-#      sslmode=disable TimeZone=Asia/Shanghai
-#    pwd: root
-#    type: postgres
-#    user: root
-#    enabled: false
-  - addr: 127.0.0.1:6379
-    pwd: ""
-    type: redis
-    user: ""
-    enabled: false
-
-broker:
+cache:
   enabled: false
-  addr: amqp://coco:kk123123123@127.0.0.1:5672/
+  type: redis
+  addr: 127.0.0.1:6379
   pwd: ""
-  type: rabbitmq
-  user: ""
+
+store:
+  enabled: true
+  auto_migrate: true
+  db:
+    - addr: host=127.0.0.1 user=postgres password=root dbname=hello port=5432
+        sslmode=disable TimeZone=Asia/Shanghai
+      pwd: root
+      type: postgres
+      user: root
+      enabled: false
+    - addr: 127.0.0.1:6379
+      pwd: ""
+      type: redis
+      user: ""
+      enabled: false
+
+event:
+    enabled: false
+    topic_prefix: phanes
+    broker:
+      addr: ""
+      pwd: ""
+      type: kafka
+
+client:
+  broker:
+    enabled: false
+    addr: amqp://coco:kk123123123@127.0.0.1:5672/
+    pwd: ""
+    type: rabbitmq
+    user: ""
 
 # otel config
 collect:

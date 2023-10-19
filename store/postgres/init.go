@@ -7,27 +7,33 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	log "phanes/collector/logger"
+	"phanes/errors"
 )
-
-var db *gorm.DB
 
 type contextTxKey struct{}
 
-var ContextTxKey = contextTxKey{}
+var (
+	db              *gorm.DB
+	enabled         = false
+	NotEnabledError = errors.New("postgres not enabled")
+	ContextTxKey    = contextTxKey{}
+)
 
-func dbWithContext(ctx context.Context) *gorm.DB {
-	return GetDB(ctx)
-}
-
-func GetDB(ctx context.Context) *gorm.DB {
+func GetDB(ctx context.Context) (*gorm.DB, error) {
+	if !enabled {
+		return nil, NotEnabledError
+	}
 	tx, ok := ctx.Value(ContextTxKey).(*gorm.DB)
 	if ok {
-		return tx
+		return tx, nil
 	}
-	return db.WithContext(ctx)
+	return db.WithContext(ctx), nil
 }
 
-func Init(connectAddr string) func() {
+func Init(enabled bool, connectAddr string) func() {
+	if !enabled {
+		return func() {}
+	}
 	var (
 		err   error
 		sqlDB *sql.DB
@@ -49,6 +55,7 @@ func Init(connectAddr string) func() {
 	for _, s := range migrates {
 		s.Init()
 	}
+	enabled = true
 	return func() {
 		if err = sqlDB.Close(); err != nil {
 			log.Error(err.Error())

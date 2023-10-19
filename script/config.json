@@ -1,71 +1,86 @@
 {
-  "name": "phanes",
+  "name": "Phanes",
   "env": "dev",
   "version": "0.1.0",
-  "http": {
-    "http_listen": ":7771",
-    "validate_trans": "zh"
-  },
-
-  "grpc": {
-    "grpc_listen": ":9090",
-    "discovery_listen": "",
-    "validate_trans": "zh"
-  },
-
-  "collect": {
-    "log": {
-      "prefix": "【Phanes】",
-      "file_name": "admin",
-      "redis": {
-        "redis_key": "log_list",
-        "addr": "",
-        "pwd": ""
-      }
+  "server": {
+    "http": {
+      "http_listen": ":7771",
+      "validate_trans": "zh"
     },
-    "trace": {
-      "enabled": false,
-      "addr": ""
-    },
-    "metric": {
-      "enabled": false,
-      "addr": ""
+    "grpc": {
+      "grpc_listen": ":7090",
+      "discovery_listen": "",
+      "validate_trans": "zh"
     }
   },
-
-  "db": [
-    {
-      "enabled": false,
-      "type": "postgres",
-      "addr": "host=127.0.0.1 user=root password=root dbname=phanes port=5432 sslmode=disable TimeZone=Asia/Shanghai",
-      "user": "root",
-      "pwd": "root"
-    },
-    {
-        "enabled": false,
-        "type": "redis",
-        "addr": "127.0.0.1:6379",
-        "user": "",
-        "pwd": ""
-    }
-  ],
-
-  "proxy": {
-    "domain": "http://127.0.0.1",
-    "prefix": "/phanes"
-  },
-
-  "broker": {
+  "cache": {
     "enabled": false,
-    "type": "rabbitmq",
-    "addr": "amqp://coco:kk123123123@127.0.0.1:5672/",
-    "user": "",
+    "type": "redis",
+    "addr": "127.0.0.1:6379",
     "pwd": ""
   },
-
-  "traefik": {
+  "store": {
+    "enabled": true,
+    "auto_migrate": true,
+    "db": [
+      {
+        "addr": "host=127.0.0.1 user=postgres password=root dbname=hello port=5432 sslmode=disable TimeZone=Asia/Shanghai",
+        "pwd": "root",
+        "type": "postgres",
+        "user": "root",
+        "enabled": false
+      },
+      {
+        "addr": "127.0.0.1:6379",
+        "pwd": "",
+        "type": "redis",
+        "user": "",
+        "enabled": false
+      }
+    ]
+  },
+  "event": {
     "enabled": false,
+    "topic_prefix": "phanes",
+    "broker": {
+      "addr": "",
+      "pwd": "",
+      "type": "kafka"
+    }
+  },
+  "client": {
+    "broker": {
+      "enabled": false,
+      "addr": "amqp://coco:kk123123123@127.0.0.1:5672/",
+      "pwd": "",
+      "type": "rabbitmq",
+      "user": ""
+    }
+  },
+  "collect": {
+    "log": {
+      "level": -1,
+      "file_name": "admin",
+      "prefix": "[PHANES]",
+      "buffer_size": 4096,
+      "interval": 10
+    },
+    "metric": {
+      "listen": ":2223",
+      "enabled": false
+    },
+    "trace": {
+      "addr": "http://localhost:14268/api/traces",
+      "enabled": true,
+      "protocol": "http",
+      "type": "jaeger"
+    }
+  },
+  "traefik": {
+    "type": "tcp",
+    "rule": "&&",
+    "tls": true,
     "domain": "test.com",
-    "prefix": "/phanes"
+    "enabled": true
   }
 }
