@@ -10,7 +10,6 @@ import (
 	"go-micro.dev/v4/server"
 	"phanes/config"
 	"phanes/server/grpc/middleware"
-	"phanes/utils"
 )
 
 func Init() micro.Option {
@@ -40,6 +39,5 @@ func Init() micro.Option {
 	// ⚠️Waring!!!: Your service struct Name Must seem to the .proto file service Name
 	// utils.Throw(micro.RegisterHandler(srv, new(v1.User)))
 
-	utils.Throw(srv.Start())
 	return micro.Server(srv)
 }

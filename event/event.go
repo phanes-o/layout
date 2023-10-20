@@ -4,4 +4,5 @@ package event
 
 const (
 	ExampleEvent Event = "example_event"
+	EventExit    Event = "event_exit"
 )
