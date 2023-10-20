@@ -1,13 +1,17 @@
 package server
 
 import (
+	"context"
+
 	"github.com/asim/go-micro/plugins/client/grpc/v4"
 	"github.com/asim/go-micro/plugins/registry/etcd/v4"
 	"github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/registry"
+	log "phanes/collector/logger"
 	"phanes/config"
+	"phanes/event"
 	grpcServer "phanes/server/grpc"
 	"phanes/server/grpc/middleware"
 
@@ -21,6 +25,7 @@ func Init() func() {
 
 	config.MicroService.Init(
 		micro.Registry(etcd.NewRegistry(registry.Addrs(config.EtcdAddr))),
+		micro.AfterStart(AfterStart),
 		micro.AfterStop(AfterExit),
 		// client trace wrapper
 		micro.Client(grpc.NewClient(client.WrapCall(middleware.ClientTraceWrapper()), client.Retries(0))),
@@ -36,7 +41,13 @@ func Init() func() {
 	return func() {}
 }
 
-func AfterExit() error {
+func AfterStart() error {
+	log.Info("finished to init all component")
+	return nil
+}
 
+func AfterExit() error {
+	event.Publish(context.Background(), event.EventExit, nil)
+	log.Info("server shutdown!")
 	return nil
 }

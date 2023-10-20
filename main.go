@@ -1,16 +1,13 @@
 package main
 
 import (
-	"os"
-	"os/signal"
+	"context"
 
-	sig "go-micro.dev/v4/util/signal"
 	"phanes/assistant"
 	"phanes/bll"
 	"phanes/cache"
 	"phanes/client"
 	"phanes/collector"
-	log "phanes/collector/logger"
 	"phanes/config"
 	"phanes/event"
 	"phanes/server"
@@ -21,13 +18,10 @@ type InitFunc func() func()
 
 func main() {
 	var (
-		cancels = make([]func(), 0)
-
 		// system init func
 		bootstraps = []InitFunc{
 			config.Init,
 			collector.Init,
-			event.Init,
 			cache.Init,
 			server.Init,
 			client.Init,
@@ -36,23 +30,13 @@ func main() {
 			bll.Init,
 		}
 	)
-	go func() {
-		sigint := make(chan os.Signal, 1)
 
-		signal.Notify(sigint, sig.Shutdown()...)
-		<-sigint
-
-		for _, cancel := range cancels {
+	event.Init()
+	for _, bootstrap := range bootstraps {
+		cancel := bootstrap()
+		event.Subscribe(event.EventExit, func(ctx context.Context, e event.Event, payload interface{}) {
 			cancel()
-		}
-		close(config.ExitC)
-	}()
-
-	for _, fn := range bootstraps {
-		cancels = append(cancels, fn())
+		})
 	}
-	log.Info("finished to init all component")
-
-	<-config.ExitC
-	log.Info("server shutdown!")
+	config.MicroService.Run()
 }

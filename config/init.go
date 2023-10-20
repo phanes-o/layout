@@ -89,7 +89,9 @@ func Init() func() {
 	for _, init := range inits {
 		cancels = append(cancels, init())
 	}
+	
 	return func() {
+		close(ExitC)
 		for _, cancel := range cancels {
 			cancel()
 		}
