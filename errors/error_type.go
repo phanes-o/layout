@@ -26,6 +26,9 @@ func (t Type) String() string {
 		return "bad request"
 	case Unauthorized:
 		return "unauthorized"
+	case ErrParamsParse:
+		return "ErrParamsParse"
+
 	case Forbidden:
 		return "forbidden"
 	case NotFound:

@@ -56,6 +56,11 @@ type Config struct {
 		Domain  string `json:"domain" yaml:"domain" toml:"domain"`    // gateway domain
 		Prefix  string `json:"prefix" yaml:"prefix" toml:"prefix"`    // if Prefix is not empty, it will register router and middleware
 	} `json:"traefik" yaml:"traefik" toml:"traefik"`
+
+	IdGen struct {
+		Type int `json:"type" yaml:"type" toml:"type"`
+		Node int `json:"node" yaml:"node" toml:"node"`
+	} `json:"id_gen" yaml:"id_gen" toml:"id_gen"`
 }
 
 type Collect struct {

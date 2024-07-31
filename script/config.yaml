@@ -13,17 +13,17 @@ grpc:
 
 
 db:
-#  - addr: host=127.0.0.1 user=postgres password=root dbname=hello port=5432
-#      sslmode=disable TimeZone=Asia/Shanghai
-#    pwd: root
-#    type: postgres
-#    user: root
-#    enabled: false
+  - addr: host=192.168.1.101 user=root password=root dbname=box port=5432 sslmode=disable TimeZone=Asia/Shanghai
+    pwd: root
+    type: postgres
+    user: root
+    enabled: true
   - addr: 127.0.0.1:6379
     pwd: ""
     type: redis
     user: ""
     enabled: false
+
 
 broker:
   enabled: false
@@ -49,10 +49,10 @@ collect:
     # metrics will listen a http port
     # example: localhost:2223/metrics
     listen: ":2223"
-    enabled: false
+    enabled: true
   trace:
     addr: "http://localhost:14268/api/traces"
-    enabled: false
+    enabled: true
 
 traefik:
   # reverse proxy type support: tcp udp http grpc(h2c)
@@ -66,3 +66,10 @@ traefik:
   enabled: true
   # match prefix
   # prefix:
+
+# id生成器
+id_gen:
+  # 0: 自增id 1 : 雪花ID
+  type: 1
+  # 雪花ID 节点
+  node: 1

@@ -10,3 +10,8 @@ const (
 	ConfigFileTypeToml = "toml"
 	ConfigFileTypeJson = "json"
 )
+
+const (
+	IdGenTypeIncrease = iota //自增id
+	IdGenTypeSnow            //雪花
+)
