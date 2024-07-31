@@ -36,7 +36,7 @@ func toJson(data interface{}) []byte {
 	return marshal
 }
 
-// PageUtil 分页工具
+// PageUtil Page util
 func PageUtil(size, index int) (int, int) {
 	if index == 0 {
 		index = 1
@@ -54,7 +54,7 @@ func PageCount(total, pageSize int64) int64 {
 	return int64(math.Ceil(float64(total) / float64(pageSize)))
 }
 
-// GenerateSalt 生成密码盐值
+// GenerateSalt Generate a password salt.
 func GenerateSalt() (string, error) {
 	salt := make([]byte, saltSize)
 	_, err := rand.Read(salt)

@@ -13,7 +13,7 @@ grpc:
 
 
 db:
-  - addr: host=192.168.1.101 user=root password=root dbname=box port=5432 sslmode=disable TimeZone=Asia/Shanghai
+  - addr: host=127.0.0.1 user=root password=root dbname=hello port=5432 sslmode=disable TimeZone=Asia/Shanghai
     pwd: root
     type: postgres
     user: root
@@ -67,9 +67,9 @@ traefik:
   # match prefix
   # prefix:
 
-# id生成器
+# ID generator
 id_gen:
-  # 0: 自增id 1 : 雪花ID
+  # 0: Auto-increment ID 1 : Snowflake ID
   type: 1
-  # 雪花ID 节点
+  # Snowflake ID node
   node: 1

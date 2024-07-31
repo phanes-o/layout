@@ -12,6 +12,6 @@ const (
 )
 
 const (
-	IdGenTypeIncrease = iota //自增id
-	IdGenTypeSnow            //雪花
+	IdGenTypeIncrease = iota //Auto-increment ID
+	IdGenTypeSnow            //snow
 )

@@ -30,7 +30,7 @@ func ParseTimeString(timeStr string) (int, int, error) {
 	return hour, minute, nil
 }
 
-// ValidateTime 验证时间是否在合法范围内
+// ValidateTime Verify whether the time is within a valid range.
 func ValidateTime(hour, minute int) error {
 	if hour < 0 || hour > 23 {
 		return fmt.Errorf("hour must be between 0 and 23")
@@ -41,7 +41,7 @@ func ValidateTime(hour, minute int) error {
 	return nil
 }
 
-// CompareTimes 比较开始时间和结束时间
+// CompareTimes Compare the start time and end time.
 func CompareTimes(startHour, startMinute, endHour, endMinute int) error {
 	startTime := time.Date(0, 1, 1, startHour, startMinute, 0, 0, time.Local)
 	endTime := time.Date(0, 1, 1, endHour, endMinute, 0, 0, time.Local)
@@ -51,28 +51,28 @@ func CompareTimes(startHour, startMinute, endHour, endMinute int) error {
 	return nil
 }
 
-// CheckTime 检查时间
+// CheckTime check time
 func CheckTime(timeStr string) (int, int, error) {
 	var (
 		hour   int
 		minute int
 		err    error
 	)
-	// 数据格式
+
 	if hour, minute, err = ParseTimeString(timeStr); err != nil {
 		return 0, 0, err
 	}
 	return hour, minute, nil
 }
 
-// ConvertToCronSpec 转换为表达式
+// ConvertToCronSpec Convert to an expression.
 func ConvertToCronSpec(hour, minute int) string {
 	return fmt.Sprintf("%d %d * * ?", minute, hour)
 }
 
-// IsCurrentTimeInRange 判断系统当前时间是否在时间范围内
+// IsCurrentTimeInRange Determine whether the system's current time is within the time range.
 func IsCurrentTimeInRange(start, end string) (bool, error) {
-	// 解析 startTime 和 endTime
+	// Parse startTime and endTime.
 	startTime, err := time.Parse("15:04", start)
 	if err != nil {
 		return false, fmt.Errorf("failed to parse startTime: %v", err)
@@ -82,14 +82,14 @@ func IsCurrentTimeInRange(start, end string) (bool, error) {
 		return false, fmt.Errorf("failed to parse endTime: %v", err)
 	}
 
-	// 获取当前时间的小时和分钟
+	// Get the current time's hour and minute.
 	now := time.Now()
 	currentTime, err := time.Parse("15:04", now.Format("15:04"))
 	if err != nil {
 		return false, fmt.Errorf("failed to parse currentTime: %v", err)
 	}
 
-	// 判断当前时间是否在范围内
+	// Check if the current time is within the range.
 	if currentTime.After(startTime) && currentTime.Before(endTime) {
 		return true, nil
 	}
