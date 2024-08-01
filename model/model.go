@@ -10,3 +10,8 @@ const (
 	ConfigFileTypeToml = "toml"
 	ConfigFileTypeJson = "json"
 )
+
+const (
+	IdGenTypeIncrease = iota //Auto-increment ID
+	IdGenTypeSnow            //snow
+)

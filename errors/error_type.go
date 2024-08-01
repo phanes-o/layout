@@ -6,7 +6,7 @@ const (
 
 	Unauthorized Type = 1000
 
-	ErrParamsParse Type = iota + 1000
+	ErrInvalidParams Type = iota + 1000
 )
 
 const (
@@ -26,6 +26,9 @@ func (t Type) String() string {
 		return "bad request"
 	case Unauthorized:
 		return "unauthorized"
+	case ErrInvalidParams:
+		return "invalid parameters"
+
 	case Forbidden:
 		return "forbidden"
 	case NotFound:

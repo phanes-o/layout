@@ -29,6 +29,13 @@ func (t Type) New(msg string) error {
 	return e
 }
 
+func (t Type) Error() error {
+	return CustomError{
+		errType:       t,
+		originalError: errors.New(t.String()),
+	}
+}
+
 func (t Type) Warp(err error, msg string) error {
 	return CustomError{
 		errType:       t,

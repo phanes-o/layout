@@ -67,5 +67,10 @@
     "enabled": false,
     "domain": "test.com",
     "prefix": "/phanes"
+  },
+
+  "id_gen": {
+    "type": 1,
+    "node": 1
   }
 }

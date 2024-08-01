@@ -13,12 +13,12 @@ require (
 	github.com/asim/go-micro/plugins/server/grpc/v4 v4.0.0-20211023082042-af3cfa0a4cac
 	github.com/asim/go-micro/plugins/server/http/v4 v4.0.0-20220622010113-107bd74187e7
 	github.com/asim/go-micro/plugins/wrapper/select/roundrobin/v4 v4.0.0-20220624181847-9960cd1d36c8
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.11.0
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/phanes-o/proto v0.0.0-20220701033122-9b88971eb0cd
 	github.com/pkg/errors v0.9.1
 	github.com/uptrace/opentelemetry-go-extra/otelzap v0.2.1
 	github.com/urfave/cli/v2 v2.25.7
